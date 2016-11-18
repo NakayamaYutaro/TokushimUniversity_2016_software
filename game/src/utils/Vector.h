@@ -21,7 +21,7 @@ class Vector{
 		Vector<T> operator +=(Vector<T> vec2) {  x += vec2.getX(); y += vec2.getY(); }
 		Vector<T> operator -=(Vector<T> vec2) {  x -= vec2.getX(); y -= vec2.getY(); }
 		Vector<T> operator *=(T scale) {  x *= scale; y *= scale; }
-		Vector<T> operator /=(T divided_by) {  x /= divided_by; y /= divided_by; }
+		Vector<T> operator /=(double divided_by) {  x = (T)(x/divided_by); y = (T)(y/divided_by); }
 		double getMagnitude(){ return sqrt(x*x + y*y); }
 		double getInnerProduct(Vector<T> vec2){ return (double)(x*vec2.getX() + y*vec2.getY()); }
 		void display() { std::cout << "(" << x << ", " << y << ")" << std::endl; }

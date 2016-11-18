@@ -3,8 +3,8 @@
 #include "Rumba.h"
 #include "CustomizedRumba.h"
 #include "Equipment.h"
+#include "../utils/LinkedList.h"
 #include "../views/GameWindow.h"
-#include <stdarg.h>
 
 #define RUNAWAY_RUMBA_H
 #define MAX_SPEED 4.0
@@ -13,15 +13,16 @@ class RunawayRumba : public Rumba {
 	private:
 		bool judgeCollision(Equipment* equipment);
 		bool judgeCollision(CustomizedRumba* rumba);
-		Vector<double> speed_vec;
-	public:
-		RunawayRumba(int x, int y, int r) : Rumba(x, y, r) {
-			speed_vec = Vector<double>(0.0, 0.0);
-		}
-		void behave();
-		void behaveCollision(int object_num, ...);
+		Vector<int> speed_vec;
 		Vector<int> getReflectedVector(Equipment* equipment);
 		Vector<int> getReflectedVector(CustomizedRumba* rumba);
+		void getReflectedVector(GameWindow* field);
+	public:
+		RunawayRumba(int x, int y, int r) : Rumba(x, y, r) {
+			speed_vec = Vector<int>(0.0, 0.0);
+		}
+		void behave();
+		void behaveCollision(GameWindow* window, LinkedList<Equipment>* equip_list, LinkedList<CustomizedRumba>* rumba_list);
 };
 
 Vector<int> RunawayRumba::getReflectedVector(Equipment* equipment) {
@@ -52,35 +53,33 @@ Vector<int> RunawayRumba::getReflectedVector(CustomizedRumba* rumba) {
 	return Vector<int>(0, 0);
 }
 
+void RunawayRumba::getReflectedVector(GameWindow* field) {
+	if(
+			// judge both side (left and right)
+			(field->getWidth() - (center_pos.getX() + radius)) < 0 || 
+			center_pos.getX() < radius || 
+			// judge both side (top and bottom)
+			(field->getHeight() - (center_pos.getY() + radius)) < 0 || 
+			center_pos.getY() < radius
+	) speed_vec *= -1;
+}
+
 void RunawayRumba::behave() { center_pos = center_pos + speed_vec; }
 
-void RunawayRumba::behaveCollision(GameWindow* field, int object_num, ...) {
-	va_list args;
+void RunawayRumba::behaveCollision(GameWindow* field, LinkedList<Equipment>* equip_list, LinkedList<CustomizedRumba>* rumba_list) {
 	Object obj;
-	Equipment* equipment;
-	CustomizedRumba* rumba;
-	Vector<double> tmp_vec = speed_vec;
+	Vector<int> tmp_vec = speed_vec;
 	int i;
 
-	va_start(args, object_num);
-	for(i = 0; i < object_num; i++) {
-		equipment = NULL;
-		rumba = NULL;
+	equip_list->resetCurrent();
+	rumba_list->resetCurrent();
+	for(i = 0; i < equip_list->getSize(); i++) tmp_vec += getReflectedVector( equip_list->getPtr() );
+	for(i = 0; i < rumba_list->getSize(); i++) tmp_vec += getReflectedVector( rumba_list->getPtr() );
 
-		obj = va_arg(args, Object);
-		equipment = dynamic_cast<Equipment*>(&obj);
-		if(equipment != NULL) tmp_vec += getReflectedVector(equipment);
-		else {
-			rumba = dynamic_cast<CustomizedRumba*>(&obj);
-			if(rumba != NULL) tmp_vec += getReflectedVector(equipment);
-		}
-	}
-	va_end(args);
 	if(tmp_vec.getMagnitude() > MAX_SPEED) {
-		tmp_vec /= vmp.getMagnitude();
+		tmp_vec /= tmp_vec.getMagnitude();
 		tmp_vec *= MAX_SPEED;
 	}
-	speed_vec = tmp_vec;
 }
 
 #endif
