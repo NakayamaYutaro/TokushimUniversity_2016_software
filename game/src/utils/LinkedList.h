@@ -1,8 +1,7 @@
 #ifndef LINKEDLIST_H
+#define LINKEDLIST_H
 
 #include<iostream>
-
-#define LINKEDLIST
 
 // 0 is substitude of NULL.
 

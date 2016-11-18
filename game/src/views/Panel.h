@@ -1,5 +1,4 @@
 #ifndef Panel_H
-
 #define Panel_H
 
 #include "../utils/LinkedList.h"
@@ -14,6 +13,6 @@ class Panel{
 		Vector<int> position;
 		void drawPanel(SDL_Surface* window) {
 		}
-}
+};
 
 #endif

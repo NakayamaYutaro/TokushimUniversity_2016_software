@@ -7,6 +7,6 @@ class GameWindow : public Window {
 	public:
 		void drawObjects() {
 		}
-}
+};
 
 #endif

@@ -1,4 +1,5 @@
 #ifndef RUNAWAY_RUMBA_H
+#define RUNAWAY_RUMBA_H
 
 #include "Rumba.h"
 #include "CustomizedRumba.h"
@@ -6,7 +7,6 @@
 #include "../utils/LinkedList.h"
 #include "../views/GameWindow.h"
 
-#define RUNAWAY_RUMBA_H
 #define MAX_SPEED 4.0
 
 class RunawayRumba : public Rumba {
