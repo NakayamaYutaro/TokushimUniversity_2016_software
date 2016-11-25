@@ -5,6 +5,7 @@
 
 class GameWindow : public Window {
 	public:
+		GameWindow(int w, int h) : Window(w, h) { }
 		void drawObjects() {
 		}
 };
