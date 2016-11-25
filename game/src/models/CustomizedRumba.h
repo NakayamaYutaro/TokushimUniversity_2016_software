@@ -6,19 +6,19 @@
 
 class CustomizedRumba : public Rumba {
 	private:
-		Vector<int> speed_vec;
-		Vector<int> prev_pos;
+		Vector<float> speed_vec;
+		Vector<float> prev_pos;
 	public:
 		CustomizedRumba(int x, int y, int r) : Rumba(x, y, r) {
-			speed_vec = Vector<int>(0, 0);
+			speed_vec = Vector<float>(0, 0);
 			prev_pos = center_pos;
 		}
-		void controll(Vector<int> new_pos) {
+		void controll(Vector<float> new_pos) {
 			prev_pos = center_pos;
 			center_pos = new_pos;
 			speed_vec = center_pos - prev_pos;
 		}
-		Vector<int> getSpeedVector() {
+		Vector<float> getSpeedVector() {
 			return (center_pos - prev_pos);
 		}
 };

@@ -1,0 +1,40 @@
+In file included from test_model.cpp:2:0:
+RunawayRumba.h: In member function ‘Vector<float> RunawayRumba::getReflectedVector(Equipment*)’:
+RunawayRumba.h:36:30: error: ambiguous overload for ‘operator-’ (operand types are ‘Vector<float>’ and ‘float’)
+   vertical_len = (center_pos - (float)(list[i]) ).getInnerProduct(tmp_vec) / pow(tmp_vec.getMagnitude(), 2.0);
+                              ^
+RunawayRumba.h:36:30: note: candidate: operator-(int, float) <built-in>
+RunawayRumba.h:36:30: note: candidate: operator-(float, float) <built-in>
+RunawayRumba.h:36:30: note: candidate: operator-(double, float) <built-in>
+In file included from Rumba.h:4:0,
+                 from RunawayRumba.h:4,
+                 from test_model.cpp:2:
+../utils/Vector.h:21:13: note: candidate: Vector<T> Vector<T>::operator-(Vector<T>) [with T = float]
+   Vector<T> operator -(Vector<T> vec2) { return Vector<T>(x - vec2.getX(), y - vec2.getY()); }
+             ^
+In file included from test_model.cpp:2:0:
+RunawayRumba.h:40:49: error: ambiguous overload for ‘operator-’ (operand types are ‘Vector<int>’ and ‘Vector<float>’)
+    return ( (tmp_vec * vertical_len) + list[i]) - center_pos;
+                                                 ^
+RunawayRumba.h:40:49: note: candidate: operator-(int, int) <built-in>
+RunawayRumba.h:40:49: note: candidate: operator-(int, float) <built-in>
+RunawayRumba.h:40:49: note: candidate: operator-(int, double) <built-in>
+RunawayRumba.h:40:49: note: candidate: operator-(float, int) <built-in>
+RunawayRumba.h:40:49: note: candidate: operator-(float, float) <built-in>
+RunawayRumba.h:40:49: note: candidate: operator-(float, double) <built-in>
+RunawayRumba.h:40:49: note: candidate: operator-(double, int) <built-in>
+RunawayRumba.h:40:49: note: candidate: operator-(double, float) <built-in>
+RunawayRumba.h:40:49: note: candidate: operator-(double, double) <built-in>
+In file included from RunawayRumba.h:7:0,
+                 from test_model.cpp:2:
+../utils/LinkedList.h: In instantiation of ‘T LinkedList<T>::get(int) [with T = CustomizedRumba]’:
+test_model.cpp:26:2:   required from here
+../utils/LinkedList.h:68:35: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  Node<T>* node = getElementByIndex(index, "Index out of length in get().");
+                                   ^
+../utils/LinkedList.h: In instantiation of ‘T* LinkedList<T>::getPtr(int) [with T = CustomizedRumba]’:
+test_model.cpp:29:21:   required from here
+../utils/LinkedList.h:88:35: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  Node<T>* node = getElementByIndex(index, "Index out of length in get().");
+                                   ^
+make: *** [test_model] Error 1
