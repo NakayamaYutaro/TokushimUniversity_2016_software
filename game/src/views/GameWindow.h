@@ -7,8 +7,10 @@
 class GameWindow : public Window {
 	private:
 	public:
-		GameWindow(int h, int w) : Window(h, w, GAME_WINDOW_IMG_PATH) { }
+		GameWindow(int h, int w) : Window(h, w, GAME_WINDOW_BACKGROUND_PATH) { }
 		void drawObjects() {
 			// 
 		}
 };
+
+#endif
