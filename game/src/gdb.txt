@@ -1,0 +1,6 @@
+test.out: No such file or directory.
+/home/takahiro/TokushimUniversity_2016_software/game/src/core: No such file or directory.
+Undefined command: "stacktrace".  Try "help".
+No stack.
+Reading symbols from ../bin/test.out...(no debugging symbols found)...done.
+/home/takahiro/TokushimUniversity_2016_software/game/src/models/co: No such file or directory.

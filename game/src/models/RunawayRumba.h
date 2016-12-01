@@ -1,13 +1,13 @@
 #ifndef RUNAWAY_RUMBA_H
 #define RUNAWAY_RUMBA_H
 
+#include <SDL/SDL.h>
+#include <SDL/SDL_gfxPrimitives.h>
 #include "Rumba.h"
 #include "CustomizedRumba.h"
 #include "Equipment.h"
 #include "../utils/LinkedList.h"
-#include "../views/GameWindow.h"
-
-#define MAX_SPEED 4.0
+#include "../Setting.h"
 
 class RunawayRumba : public Rumba {
 	private:
@@ -16,13 +16,13 @@ class RunawayRumba : public Rumba {
 		Vector<float> speed_vec;
 		Vector<float> getReflectedVector(Equipment* equipment);
 		Vector<float> getReflectedVector(CustomizedRumba* rumba);
-		void getReflectedVector(GameWindow* field);
+		void getReflectedVector(SDL_Rect field);
 	public:
 		RunawayRumba(int x, int y, int r) : Rumba(x, y, r) {
-			speed_vec = Vector<float>(0, 0);
+			speed_vec = Vector<float>(0.0, 30.0);
 		}
 		void behave();
-		void behaveCollision(GameWindow* window, LinkedList<Equipment>* equip_list, LinkedList<CustomizedRumba>* rumba_list);
+		void behaveCollision(SDL_Rect field, LinkedList<Equipment>* equip_list, LinkedList<CustomizedRumba>* rumba_list);
 		Vector<float> getSpeedVec() { return speed_vec; }
 };
 
@@ -54,20 +54,20 @@ Vector<float> RunawayRumba::getReflectedVector(CustomizedRumba* rumba) {
 	return Vector<float>(0, 0);
 }
 
-void RunawayRumba::getReflectedVector(GameWindow* field) {
+void RunawayRumba::getReflectedVector(SDL_Rect field) {
 	if(
 			// judge both side (left and right)
-			(field->getWidth() - (center_pos.getX() + radius)) < 0 || 
+			(field.w - (center_pos.getX() + radius)) < 0 || 
 			center_pos.getX() < radius || 
 			// judge both side (top and bottom)
-			(field->getHeight() - (center_pos.getY() + radius)) < 0 || 
+			(field.w - (center_pos.getY() + radius)) < 0 || 
 			center_pos.getY() < radius
 	) speed_vec *= -1;
 }
 
 void RunawayRumba::behave() { center_pos = center_pos + speed_vec; }
 
-void RunawayRumba::behaveCollision(GameWindow* field, LinkedList<Equipment>* equip_list, LinkedList<CustomizedRumba>* rumba_list) {
+void RunawayRumba::behaveCollision(SDL_Rect field, LinkedList<Equipment>* equip_list, LinkedList<CustomizedRumba>* rumba_list) {
 	Object obj;
 	Vector<float> tmp_vec = speed_vec;
 	int i;
@@ -77,9 +77,9 @@ void RunawayRumba::behaveCollision(GameWindow* field, LinkedList<Equipment>* equ
 	rumba_list->resetCurrent();
 	for(i = 0; i < rumba_list->getSize(); i++) tmp_vec += getReflectedVector( rumba_list->getPtr() );
 
-	if(tmp_vec.getMagnitude() > MAX_SPEED) {
-		//tmp_vec /= tmp_vec.getMagnitude();
-		//tmp_vec *= MAX_SPEED;
+	if(tmp_vec.getMagnitude() > ROOMBA_SPEED) {
+		tmp_vec /= tmp_vec.getMagnitude();
+		tmp_vec *= ROOMBA_SPEED;
 	}
 	speed_vec = tmp_vec;
 }
