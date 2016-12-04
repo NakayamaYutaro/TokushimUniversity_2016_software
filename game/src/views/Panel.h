@@ -12,7 +12,7 @@ class Panel{
 		SDL_Rect img_rect;
 		Vector<int> position;
 	public:
-		Panel(int x, int y, char* img_path) : position(Vector<int>(x, y)) {
+		Panel(int x, int y, const char* img_path) : position(Vector<int>(x, y)) {
 			img = IMG_Load(img_path);
 			if(img == NULL) {
 				std::cout << SDL_GetError() << std::endl;

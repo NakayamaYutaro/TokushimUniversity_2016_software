@@ -1,5 +1,6 @@
 #ifndef RUMBA_H
 
+#include "../Setting.h"
 #include "Object.h"
 #include "../utils/Vector.h"
 
@@ -10,7 +11,7 @@ class Rumba : public Object {
 		Vector<float> center_pos;
 		int radius;
 	public:
-		Rumba(int x, int y, int r) : center_pos(Vector<float>(x, y)), radius(r) {}
+		Rumba(int x, int y) : center_pos(Vector<float>(x, y)), radius(ROOMBA_RADIUS) {}
 		Vector<float> getCenterPos() { return center_pos; }
 		int getRadius() { return radius; }
 };

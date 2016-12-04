@@ -9,7 +9,7 @@ class CustomizedRumba : public Rumba {
 		Vector<float> speed_vec;
 		Vector<float> prev_pos;
 	public:
-		CustomizedRumba(int x, int y, int r) : Rumba(x, y, r) {
+		CustomizedRumba(int x, int y) : Rumba(x, y) {
 			speed_vec = Vector<float>(0, 0);
 			prev_pos = center_pos;
 		}

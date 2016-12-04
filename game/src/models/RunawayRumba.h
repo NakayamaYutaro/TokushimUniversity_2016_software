@@ -18,8 +18,8 @@ class RunawayRumba : public Rumba {
 		Vector<float> getReflectedVector(CustomizedRumba* rumba);
 		void getReflectedVector(SDL_Rect field);
 	public:
-		RunawayRumba(int x, int y, int r) : Rumba(x, y, r) {
-			speed_vec = Vector<float>(0.0, 30.0);
+		RunawayRumba(int x, int y) : Rumba(x, y) {
+			speed_vec = Vector<float>(ROOMBA_SPEED, 0.0);
 		}
 		void behave();
 		void behaveCollision(SDL_Rect field, LinkedList<Equipment>* equip_list, LinkedList<CustomizedRumba>* rumba_list);
@@ -40,7 +40,7 @@ Vector<float> RunawayRumba::getReflectedVector(Equipment* equipment) {
 			return ( (tmp_vec * vertical_len) + list[i]) - center_pos;
 		}
 	}
-	delete list;
+	delete[] list;
 	return Vector<float>(0,0);
 }
 

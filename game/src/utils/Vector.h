@@ -19,6 +19,7 @@ class Vector{
 		Vector<T> operator *(double coefficient) { return Vector<T>( (T)(x * coefficient), (T)(y * coefficient) ); }
 		Vector<T> operator +(Vector<T> vec2) { return Vector<T>(x + vec2.getX(), y + vec2.getY()); }
 		Vector<T> operator -(Vector<T> vec2) { return Vector<T>(x - vec2.getX(), y - vec2.getY()); }
+		Vector<T> operator -(double num) { return Vector<T>(x - num, y - num); }
 		Vector<T> operator /(double divide_by) { return Vector<T>((T)(x/divide_by), (T)(y/divide_by)); }
 		Vector<T> operator +=(Vector<T> vec2) {  x += vec2.getX(); y += vec2.getY(); }
 		Vector<T> operator -=(Vector<T> vec2) {  x -= vec2.getX(); y -= vec2.getY(); }

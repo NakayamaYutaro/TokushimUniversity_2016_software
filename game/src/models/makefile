@@ -1,5 +1,5 @@
-CXXFLAGS = -D_GLIBCXX_DEBUG -std=c++11 -Wall -Wextra -v
-LDLIBS = -lCppUTest
+#CXXFLAGS = -D_GLIBCXX_DEBUG -std=c++11 -Wall -Wextra -v
+#LDLIBS = -lCppUTest
 
 .PHONY: test_model clean
 test_model:

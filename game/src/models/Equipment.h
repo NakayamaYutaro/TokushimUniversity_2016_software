@@ -13,10 +13,12 @@ class Equipment : public Object{
 		int width;
 		int height;
 	public:
-		Equipment(int x, int y, int w, int h) : position(Vector<int>(x, y)), width(w), height(h) { resetLife(); }
+		Equipment(int team_id)
+			: position( Vector<int>((team_id%2)*EQUIPMENT_WIDTH, (team_id/2)*EQUIPMENT_HEIGHT) ), width(EQUIPMENT_WIDTH), height(EQUIPMENT_HEIGHT) { resetLife(); }
 		void resetLife() { life = DEFAULT_LIFE; }
-		int decreaseLife() { life--; return life; }
 		Vector<int> getPosition() { return position; }
+		int decreaseLife() { life--; return life; }
+		int getLife() { return life; }
 		int getWidth() { return width; }
 		int getHeight() { return height; }
 		Vector<int>* getAllApexes() {
