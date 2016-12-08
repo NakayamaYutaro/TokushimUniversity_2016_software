@@ -12,10 +12,10 @@ class Panel{
 		SDL_Rect img_rect;
 		Vector<int> position;
 	public:
-		Panel(int x, int y, const char* img_path) : position(Vector<int>(x, y)) {
+		Panel(Vector<int> initial_pos, const char* img_path) : position(initial_pos) {
 			img = IMG_Load(img_path);
 			if(img == NULL) {
-				std::cout << SDL_GetError() << std::endl;
+				std::cerr << SDL_GetError() << std::endl;
 				std::exit(0);
 			}
 			img_rect.x = 0;
@@ -27,6 +27,8 @@ class Panel{
 			SDL_Rect dest_rect;
 			dest_rect.x = position.getX();
 			dest_rect.y = position.getY();
+			dest_rect.w = img->w;
+			dest_rect.h = img->h;
 			SDL_BlitSurface(img, &img_rect, window, &dest_rect);
 		}
 		void setPosition(Vector<int> new_pos) { position = new_pos; }

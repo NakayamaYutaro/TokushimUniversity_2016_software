@@ -73,7 +73,7 @@ template<typename T>
 T LinkedList<T>::get() {
 	Node<T>* node = current;
 	if(current->next != nullptr) current = current->next;
-	return current->value;
+	return node->value;
 }
 
 template<typename T>

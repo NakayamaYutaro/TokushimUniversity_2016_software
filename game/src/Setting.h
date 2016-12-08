@@ -4,11 +4,11 @@
 #define ROOMBA_SPEED 10.0
 #define PLAYER_LIFE 20
 
-#define ROOMBA_RADIUS 100
+#define ROOMBA_RADIUS 50
 
 // ------ for field ------ //
-#define GAME_FILED_WIDTH 1400
-#define GAME_FILED_WIDTH 1000
+#define GAME_FIELD_WIDTH 700
+#define GAME_FIELD_HEIGHT 1000
 // ------ for field ------ //
 
 // ------ for window ------ //
@@ -26,8 +26,10 @@
 // ------ image path ------ //
 
 // ------ for image ------ //
-#define EQUIPMENT_WIDTH 200
-#define EQUIPMENT_HEIGHT 800
+#define EQUIPMENT_WIDTH 171
+#define EQUIPMENT_HEIGHT 264
+#define LIFE_PANEL_WIDTH 200
+#define LIFE_PANEL_HEIGHT 141
 // ------ for image ------ //
 
 #endif

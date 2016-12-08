@@ -8,36 +8,55 @@
 #include <time.h>
 #include <sys/time.h>
 
-int main(int argc, char** argv) {
+#include "CppUTest/CommandLineTestRunner.h"
+
+LinkedList<CustomizedRumba>* c_rumbas = new LinkedList<CustomizedRumba>();
+LinkedList<Equipment> *equipments = new LinkedList<Equipment>();
+//GameWindow window = GameWindow(2, 0);
+GameWindow window = GameWindow(2, 2);
+//RunawayRumba rumba = RunawayRumba( window.getWidth()/2 , window.getHeight()/2);
+RunawayRumba rumba = RunawayRumba( 400 , 200 );
+
+TEST_GROUP(ModelGroup) {
+};
+TEST(ModelGroup, ModelTest) {
 	int i;
-	struct timeval timeval[100];
-	struct timespec request;
-
-	LinkedList<CustomizedRumba>* c_rumbas = new LinkedList<CustomizedRumba>();
-	LinkedList<Equipment> *equipments = new LinkedList<Equipment>();
-	GameWindow window = GameWindow(2, 2);
-	//RunawayRumba rumba = RunawayRumba( window.getWidth()/2 , window.getHeight()/2);
-	RunawayRumba rumba = RunawayRumba( 200 , 100 );
-
-	request.tv_sec = 0;
-	request.tv_nsec = 10000000;
+	bool is_finished = false;
+	SDL_Event event;
 
 	SDL_Init(SDL_INIT_EVERYTHING);
 
-	c_rumbas->add( CustomizedRumba( rumba.getCenterPos().getX() , rumba.getCenterPos().getY() + 40) );
-	c_rumbas->add( CustomizedRumba( rumba.getCenterPos().getX() , rumba.getCenterPos().getY() - 40) );
-
 	for(i = 0; i < 2; i++) equipments->add(Equipment(i));
 
-	for(i = 0; i < 1000; i++) {
-		rumba.behaveCollision(window.getRect(), equipments, c_rumbas);
+	for(i = 0; !is_finished; i++) {
+
+		if(SDL_PollEvent(&event)) {
+			switch(event.type) {
+				case SDL_QUIT:
+					is_finished = true;
+					break;
+			}
+		}
+
+		rumba.behaveCollision(window.getFieldRect(), equipments, c_rumbas);
 		rumba.behave();
+
 		window.updateObjects(&rumba, c_rumbas, equipments);
 		window.updateWindow();
-		gettimeofday(timeval + i, NULL);
-		nanosleep(&request, NULL);
-	}
-	delete c_rumbas;
 
-	return 0;
+		SDL_Delay(16);
+	}
+
+	delete c_rumbas;
+	delete equipments;
+
+	SDL_Quit();
+
+}
+
+int main(int argc, char** argv) {
+	c_rumbas->add( CustomizedRumba( rumba.getCenterPos().getX() , rumba.getCenterPos().getY() + 100) );
+	c_rumbas->add( CustomizedRumba( rumba.getCenterPos().getX() + 180, rumba.getCenterPos().getY() - 180) );
+
+	return CommandLineTestRunner::RunAllTests(argc, argv);
 }
