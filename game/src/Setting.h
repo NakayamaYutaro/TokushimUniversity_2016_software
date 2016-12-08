@@ -1,14 +1,14 @@
 #ifndef SETTING_H
 #define SETTING_H
 
-#define ROOMBA_SPEED 10.0
+#define ROOMBA_SPEED 15.0
 #define PLAYER_LIFE 20
 
 #define ROOMBA_RADIUS 50
 
 // ------ for field ------ //
 #define GAME_FIELD_WIDTH 700
-#define GAME_FIELD_HEIGHT 1000
+#define GAME_FIELD_HEIGHT 500
 // ------ for field ------ //
 
 // ------ for window ------ //

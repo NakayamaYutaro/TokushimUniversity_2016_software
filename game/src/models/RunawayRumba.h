@@ -3,6 +3,7 @@
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_gfxPrimitives.h>
+#include <cmath>
 #include "Rumba.h"
 #include "CustomizedRumba.h"
 #include "Equipment.h"
@@ -29,20 +30,29 @@ class RunawayRumba : public Rumba {
 Vector<float> RunawayRumba::getReflectedVector(Equipment* equipment) {
 	Vector<int>* list = equipment->getAllApexes();
 	Vector<int> tmp_vec;
-	double vertical_len;
 	int i;
 	for( i = 0; i < 4; i++) {
-		tmp_vec = list[(i+1)%4] - list[i];
-		vertical_len = ( center_pos - (Vector<float>)list[i] ).getInnerProduct(tmp_vec) / pow(tmp_vec.getMagnitude(), 2.0);
-		if( vertical_len < radius ) {
-			equipment->decreaseLife();
-			if(i%2 == 0) {	// vertical edge
-				return Vector<float>( -speed_vec.getX(), speed_vec.getY() );
-			} else {				// horizontal edge
+
+		// r.f. http://marupeke296.com/COL_2D_No5_PolygonToCircle.html
+		Vector<int> S = list[(i+1)%4] - list[i];
+		Vector<int> A = center_pos - list[i];
+		Vector<int> B = center_pos - list[(i+1)%4];
+		double distance = S.getOuterProduct(A)/S.getMagnitude();
+
+		if( fabs(distance) < radius && (A.getInnerProduct(S)*B.getInnerProduct(S) < 0) ) {
+
+			if( i%2 == 0 && (speed_vec.getY()*A.getY() < 0) ) {	// horizontal edge (hit edge is horizontal and roomba turns to the edge)
+				equipment->decreaseLife();
+				delete[] list;
 				return Vector<float>( speed_vec.getX(), -speed_vec.getY() );
 			}
-			delete[] list;
+			if( i%2 == 1 && (speed_vec.getX()*A.getX() < 0) ) {	// vertical edge
+				equipment->decreaseLife();
+				delete[] list;
+				return Vector<float>( -speed_vec.getX(), speed_vec.getY() );
+			}
 		}
+
 	}
 	delete[] list;
 	return Vector<float>(0,0);
@@ -60,9 +70,15 @@ Vector<float> RunawayRumba::getReflectedVector(CustomizedRumba* rumba) {
 
 Vector<float> RunawayRumba::getReflectedVector(SDL_Rect field) {
 	// judge vertical side
-	if( (field.w - (center_pos.getX() + radius)) < 0 || center_pos.getX() < radius ) return Vector<float>( -speed_vec.getX(), speed_vec.getY() );
+	if( ( (field.w - (center_pos.getX() + radius)) < 0 && speed_vec.getX() > 0)
+		|| (center_pos.getX() < radius && speed_vec.getX() < 0) ) {
+		return Vector<float>( -speed_vec.getX(), speed_vec.getY() );
+	}
 	// judge horizontal side
-	if( (field.w - (center_pos.getY() + radius)) < 0 || center_pos.getY() < radius ) return Vector<float>( speed_vec.getX(), -speed_vec.getY() );
+	if( ((field.h - (center_pos.getY() + radius)) < 0 && speed_vec.getY() > 0)
+		|| (center_pos.getY() < radius && speed_vec.getY() < 0) ) {
+		return Vector<float>( speed_vec.getX(), -speed_vec.getY() );
+	}
 	return Vector<float>(0.0, 0.0);
 }
 
@@ -75,17 +91,15 @@ void RunawayRumba::behaveCollision(SDL_Rect field, LinkedList<Equipment>* equip_
 	tmp_vec += getReflectedVector(field);
 	// reflected by all Equipments
 	equip_list->resetCurrent();
-	for(i = 0; i < equip_list->getSize(); i++) tmp_vec += getReflectedVector( equip_list->getPtr() );
+	for(i = 0; i < equip_list->getSize(); i++) tmp_vec += getReflectedVector( equip_list->getPtr(i) );
 	// reflected by all Customized roombas
 	rumba_list->resetCurrent();
-	for(i = 0; i < rumba_list->getSize(); i++) tmp_vec += getReflectedVector( rumba_list->getPtr() );
+	for(i = 0; i < rumba_list->getSize(); i++) tmp_vec += getReflectedVector( rumba_list->getPtr(i) );
 	// reflected by all field sides
 
-	if(tmp_vec.getMagnitude() > ROOMBA_SPEED) {
-		tmp_vec /= tmp_vec.getMagnitude();
-		tmp_vec *= ROOMBA_SPEED;
-	}
-	if(tmp_vec.getMagnitude() < 0.01) return;
+	if(tmp_vec.getMagnitude() < 0.1) return;
+	tmp_vec /= tmp_vec.getMagnitude();
+	tmp_vec *= ROOMBA_SPEED;
 	speed_vec = tmp_vec;
 }
 
