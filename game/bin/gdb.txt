@@ -1,0 +1,81 @@
+"/home/takahiro/TokushimUniversity_2016_software/game/bin/core": not in executable format: File format not recognized
+"/home/takahiro/TokushimUniversity_2016_software/game/bin/test.out" is not a core dump: File format not recognized
+Undefined command: "bs".  Try "help".
+List of classes of commands:
+
+aliases -- Aliases of other commands
+breakpoints -- Making program stop at certain points
+data -- Examining data
+files -- Specifying and examining files
+internals -- Maintenance commands
+obscure -- Obscure features
+running -- Running the program
+stack -- Examining the stack
+status -- Status inquiries
+support -- Support facilities
+tracepoints -- Tracing of program execution without stopping the program
+user-defined -- User-defined commands
+
+Type "help" followed by a class name for a list of commands in that class.
+Type "help all" for the list of all commands.
+Type "help" followed by command name for full documentation.
+Type "apropos word" to search for commands related to "word".
+Command name abbreviations are allowed if unambiguous.
+Undefined command: "stacktrace".  Try "help".
+Undefined command: "bs".  Try "help".
+No stack.
+Undefined command: "exit".  Try "help".
+Undefined command: "bs".  Try "help".
+"/home/takahiro/TokushimUniversity_2016_software/game/bin/core": not in executable format: File format not recognized
+"/home/takahiro/TokushimUniversity_2016_software/game/bin/test.out" is not a core dump: File format not recognized
+Undefined command: "bs".  Try "help".
+Starting program:  
+No executable file specified.
+Use the "file" or "exec-file" command.
+"/home/takahiro/TokushimUniversity_2016_software/game/bin/core": not in executable format: File format not recognized
+"/home/takahiro/TokushimUniversity_2016_software/game/bin/test.out" is not a core dump: File format not recognized
+No stack.
+Starting program:  
+No executable file specified.
+Use the "file" or "exec-file" command.
+Undefined command: "exit".  Try "help".
+"/home/takahiro/TokushimUniversity_2016_software/game/bin/core": not in executable format: File format not recognized
+"/home/takahiro/TokushimUniversity_2016_software/game/bin/test.out" is not a core dump: File format not recognized
+No stack.
+Undefined command: "exit".  Try "help".
+Reading symbols from test.out...(no debugging symbols found)...done.
+Starting program: /home/takahiro/TokushimUniversity_2016_software/game/bin/test.out 
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7ffff0312700 (LWP 4117)]
+[New Thread 0x7fffebb10700 (LWP 4118)]
+[Thread 0x7fffebb10700 (LWP 4118) exited]
+
+Thread 1 "test.out" received signal SIGSEGV, Segmentation fault.
+0x00007ffff7ffad70 in gettimeofday ()
+#0  0x00007ffff7ffad70 in gettimeofday ()
+#1  0x0000000000402e73 in TEST_ModelGroup_ModelTest_Test::testBody() ()
+#2  0x0000000000009610 in ?? ()
+#3  0x000000005847eb89 in ?? ()
+#4  0x000000000000f76e in ?? ()
+#5  0x000000005847eb89 in ?? ()
+#6  0x0000000000014fb0 in ?? ()
+#7  0x000000005847eb89 in ?? ()
+#8  0x0000000000019598 in ?? ()
+#9  0x000000005847eb89 in ?? ()
+#10 0x000000000001de72 in ?? ()
+#11 0x000000005847eb89 in ?? ()
+#12 0x00000000000245e9 in ?? ()
+#13 0x000000005847eb89 in ?? ()
+#14 0x0000000000029176 in ?? ()
+#15 0x000000005847eb89 in ?? ()
+#16 0x000000000002eb8a in ?? ()
+#17 0x000000005847eb89 in ?? ()
+#18 0x0000000000033600 in ?? ()
+#19 0x000000005847eb89 in ?? ()
+#20 0x000000000003816e in ?? ()
+#21 0x000000005847eb89 in ?? ()
+#22 0x000000000003d272 in ?? ()
+Quit
+Undefined command: "values".  Try "help".
+Reading symbols from test.out...(no debugging symbols found)...done.

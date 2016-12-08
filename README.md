@@ -11,3 +11,4 @@ This repository contains documents and sources. Used at software training 2016.
 		- models (モデル)
 		- utils (ライブラリ)
 	+ assets (画像データ保存)
+	+ bin (コンパイル後の実行ファイル)
