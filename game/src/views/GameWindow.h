@@ -47,7 +47,7 @@ GameWindow::GameWindow(int num_of_player, int team_num) :
 	for(i = 0; i < team_num; i++) life_panel_list.add( LifePanel(i) );
 
 	field_rect.x = 0; field_rect.y = 0;
-	field_rect.w = GAME_FIELD_WIDTH; field_rect.y = GAME_FIELD_HEIGHT;
+	field_rect.w = GAME_FIELD_WIDTH; field_rect.h = GAME_FIELD_HEIGHT;
 }
 
 void GameWindow::updateObjects(RunawayRumba *roomba, LinkedList<CustomizedRumba> *c_rumba_list, LinkedList<Equipment> *equip_list) {
