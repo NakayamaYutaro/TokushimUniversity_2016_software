@@ -25,7 +25,6 @@ class Communicator{
 	
 	void receiveData(vector<char> &data){
 	//objects.json
-	
          }
          
          
