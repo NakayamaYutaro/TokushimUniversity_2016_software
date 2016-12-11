@@ -38,8 +38,8 @@ TEST(ModelGroup, ModelTest) {
 			}
 		}
 
-		rumba.behaveCollision(window.getFieldRect(), equipments, c_rumbas);
-		rumba.behave();
+		rumba.calcSpeedVector(window.getFieldRect(), equipments, c_rumbas);
+		rumba.straight();
 
 		window.updateObjects(&rumba, c_rumbas, equipments);
 		window.updateWindow();
