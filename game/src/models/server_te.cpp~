@@ -5,6 +5,7 @@
 #include <netdb.h>
 #include <stdio.h>
 #include <unistd.h>
+#include<SDL/SDL.h>
 
 int main()
 {
@@ -13,7 +14,9 @@ int main()
  struct sockaddr_in client;
  int len;
  int sock;
-
+ int n;
+ int retur=1;
+ int sum=0;
 
  /* ソケットの作成 */
  sock0 = socket(AF_INET, SOCK_STREAM, 0);
@@ -25,20 +28,21 @@ int main()
  bind(sock0, (struct sockaddr *)&addr, sizeof(addr));
 
  /* TCPクライアントからの接続要求を待てる状態にする */
- listen(sock0, 5);
+ listen(sock0, 5);//第二引数：クライアント数
 
  /* TCPクライアントからの接続要求を受け付ける */
  len = sizeof(client);
  sock = accept(sock0, (struct sockaddr *)&client, (socklen_t*)&len);
-
  /* 5文字送信 */
 write(sock, "SUCCESS", 7);
-
  /* TCPセッションの終了 */
+ while(retur){
+ printf("Enter escape");scanf("%d",&n);
+ if(n==EOF){
  close(sock);
-
- /* listen するsocketの終了 */
  close(sock0);
-
+ retur = 0;
+ }
+ }
  return 0;
 }
