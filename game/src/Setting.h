@@ -1,6 +1,8 @@
 #ifndef SETTING_H
 #define SETTING_H
 
+#define TERM_ONE_FRAME_MS 16
+
 #define ROOMBA_SPEED 15.0
 #define PLAYER_LIFE 20
 
@@ -31,5 +33,9 @@
 #define LIFE_PANEL_WIDTH 200
 #define LIFE_PANEL_HEIGHT 141
 // ------ for image ------ //
+
+// ------ for network ------ //
+#define NETWORK_INTERFACE "eth0"
+// ------ for network ------ //
 
 #endif

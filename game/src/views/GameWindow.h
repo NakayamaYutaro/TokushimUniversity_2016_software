@@ -19,7 +19,7 @@ class GameWindow : public Window {
 		SDL_Rect field_rect;
 		void drawObjects();
 	public:
-		GameWindow() : Window(GAME_WINDOW_WIDTH, GAME_WINDOW_WIDTH, GAME_WINDOW_BACKGROUND_PATH) {}
+		GameWindow() : Window(GAME_WINDOW_WIDTH, GAME_WINDOW_WIDTH, (char*)GAME_WINDOW_BACKGROUND_PATH) {}
 		GameWindow(int num_of_player, int team_num);
 		void updateWindow();
 		void updateObjects(RunawayRumba *roomba, LinkedList<CustomizedRumba> *c_rumba_list, LinkedList<Equipment> *equip_list);
@@ -33,14 +33,14 @@ void GameWindow::updateWindow() {
 }
 
 GameWindow::GameWindow(int num_of_player, int team_num) :
-	Window(GAME_WINDOW_WIDTH, GAME_WINDOW_WIDTH, GAME_WINDOW_BACKGROUND_PATH) {
+	Window(GAME_WINDOW_WIDTH, GAME_WINDOW_WIDTH, (char*)GAME_WINDOW_BACKGROUND_PATH) {
 	int i;
 	rumba_panel_list = LinkedList<RumbaPanel>();
 	equip_panel_list = LinkedList<EquipmentPanel>();
 	life_panel_list = LinkedList<LifePanel>();
 	// add each roomba to lists
-	for(i = 0; i < num_of_player; i++) rumba_panel_list.add( RumbaPanel(Vector<int>(i*100 + 50, i*100+50), CUSTOMIZED_ROOMBA_IMG_PATH) );
-	rumba_panel_list.add( RumbaPanel(Vector<int>(GAME_WINDOW_WIDTH/2, GAME_WINDOW_HEIGHT/2), RUNAWAY_ROOMBA_IMG_PATH) );
+	for(i = 0; i < num_of_player; i++) rumba_panel_list.add( RumbaPanel(Vector<int>(i*100 + 50, i*100+50), (char*)CUSTOMIZED_ROOMBA_IMG_PATH) );
+	rumba_panel_list.add( RumbaPanel(Vector<int>(GAME_WINDOW_WIDTH/2, GAME_WINDOW_HEIGHT/2), (char*)RUNAWAY_ROOMBA_IMG_PATH) );
 	// add each equipment to list
 	for(i = 0; i < team_num; i++) equip_panel_list.add( EquipmentPanel(i) );
 	// add each life_panel to list

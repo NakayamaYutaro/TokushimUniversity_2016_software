@@ -3,14 +3,14 @@
 
 #include<iostream>
 
-// 0 is substitude of NULL.
+using namespace std;
 
 template<typename T>
 class Node {
 	public:
 		Node<T>* next;
 		T value;
-		Node(T val) : value(val), next(nullptr) {}
+		Node(T val) : next(nullptr), value(val) {}
 };
 
 template<typename T>
@@ -20,7 +20,7 @@ class LinkedList {
 		Node<T>* last;
 		Node<T>* current;
 		int size;
-		Node<T>* getElementByIndex(int index, char* err_msg);
+		Node<T>* getElementByIndex(int index, string err_msg);
 	public:
 		LinkedList() : head(nullptr), last(nullptr) , current(nullptr), size(0) {}
 		~LinkedList() {
@@ -39,13 +39,13 @@ class LinkedList {
 };
 
 template<typename T>
-Node<T>* LinkedList<T>::getElementByIndex(int index, char* err_msg) {
+Node<T>* LinkedList<T>::getElementByIndex(int index, string err_msg) {
 	int i = 0;
 	Node<T>* node;
 	for(node = head; i < index && node != nullptr; i++) node = node->next;
 	if(node == nullptr) {
-		std::cerr << err_msg << "\nindex: " << index << std::endl;
-		std::exit(EXIT_FAILURE);
+		cerr << err_msg << "\nindex: " << index << endl;
+		exit(EXIT_FAILURE);
 	}
 	return node;
 }
@@ -80,7 +80,7 @@ template<typename T>
 T* LinkedList<T>::getPtr() {
 	Node<T>* node = current;
 	if(current->next != nullptr) current = current->next;
-	return &(current->value);
+	return &(node->value);
 }
 
 template<typename T>
