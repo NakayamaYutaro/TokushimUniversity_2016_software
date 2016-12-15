@@ -1,8 +1,12 @@
+#include <iostream>
 #include "../Setting.h"
 #include "../utils/Timer.h"
+#include "../utils/Tuple.h"
+#include "../utils/JsonObjectsMapper.h"
 #include "../models/RunawayRumba.h"
 #include "../models/CustomizedRumba.h"
 #include "../views/GameWindow.h"
+#include <stdlib.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_gfxPrimitives.h>
 
@@ -11,18 +15,20 @@ using namespace std;
 int main(int argc, char* argv[]) {
 
 	int i;
+	int player_num = 2;
 	bool is_finished = false;
 	bool is_server = false;
 	string ip_address = "127.0.0.1";
 	Timer timer = Timer();
 	SDL_Event event;
 
-
-	if(argc < 3) {		// validate arguments from console
-		cerr << "Arguments is not enough!!" << endl;
+	if(argc < 3) {		// validate arguments from consoe
+		cerr << "Arguments is not enough!!\n(least 3 args)" << endl;
 		exit(1);
 	}
 	is_server = (argv[1][0] == 'S');
+	if(is_server) { player_num = atoi(argv[2]); }
+	else { ip_address = argv[2]; }
 
 	// --- initialize each object --- //
 	GameWindow window = GameWindow(2, 2);
@@ -38,6 +44,17 @@ int main(int argc, char* argv[]) {
 	SDL_Init(SDL_INIT_EVERYTHING);
 
 	while(!is_finished) {
+
+		// ------- test ------- //
+		cout << JsonObjectMapper::getMsgHandshake() << endl;
+		string msg = JsonObjectMapper::getMsgSendGameState(&c_rumbas, &rumba, &equipments);
+		cout << msg << endl;
+
+		Tuple<char, picojson::object> tuple = JsonObjectMapper::parseJsonMsg(msg);
+		if(tuple.getFst() == 'D') JsonObjectMapper::setGameState(tuple.getSnd(), &c_rumbas, &rumba, &equipments);
+		cout << JsonObjectMapper::getMsgHandshake() << endl;
+		// ------- test ------- //
+
 
 		if(SDL_PollEvent(&event)) {
 			switch(event.type) {
@@ -55,8 +72,11 @@ int main(int argc, char* argv[]) {
 		window.updateObjects(&rumba, &c_rumbas, &equipments);
 		window.updateWindow();
 
+
 		timer.sleep();						// sleep for keep framerate constantly
 	}
 
-	return 0;
+	SDL_Quit();
+	return EXIT_SUCCESS;
+
 }

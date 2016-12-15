@@ -22,6 +22,7 @@ class Equipment : public Object{
 		Vector<int> getPosition() { return position; }
 		int decreaseLife() { life--; return life; }
 		int getLife() { return life; }
+		void setLife(int new_life) { life = new_life; }
 		int getWidth() { return width; }
 		int getHeight() { return height; }
 		Vector<int>* getAllApexes() {

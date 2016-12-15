@@ -13,6 +13,8 @@ class Rumba : public Object {
 	public:
 		Rumba(int x, int y) : center_pos(Vector<float>(x, y) - ROOMBA_RADIUS), radius(ROOMBA_RADIUS) {}
 		Vector<float> getCenterPos() { return center_pos; }
+		void setCenterPos(Vector<int> vec) { center_pos = (Vector<float>)vec; }
+		void setCenterPos(Vector<float> vec) { center_pos = vec; }
 		int getRadius() { return radius; }
 };
 
