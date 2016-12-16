@@ -89,7 +89,7 @@ void JsonObjectMapper::setGameState(picojson::object game_state, LinkedList<Cust
 	}
 	picojson::array life_data = game_state["life"].get<picojson::array>();
 	equipments->resetCurrent();
-	for(picojson::value life : life_data) equipments->getPtr()->setLife( (int)(life.get<double>()) );
+	for(i = 0; i < life_data.size(); i++) equipments->getPtr()->setLife( (int)(life_data.at(i).get<double>()) );
 }
 
 #endif

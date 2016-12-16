@@ -9,13 +9,13 @@
 #define ROOMBA_RADIUS 50
 
 // ------ for field ------ //
-#define GAME_FIELD_WIDTH 700
-#define GAME_FIELD_HEIGHT 500
+#define GAME_FIELD_WIDTH 1400
+#define GAME_FIELD_HEIGHT 800
 // ------ for field ------ //
 
 // ------ for window ------ //
-#define GAME_WINDOW_WIDTH 700
-#define GAME_WINDOW_HEIGHT 500
+#define GAME_WINDOW_WIDTH 1400
+#define GAME_WINDOW_HEIGHT 800
 // ------ for window ------ //
 
 // ------ image path ------ //
