@@ -45,6 +45,7 @@ int main(int argc, char* argv[]) {
 
 	while(!is_finished) {
 
+/*
 		// ------- test ------- //
 		cout << JsonObjectMapper::getMsgHandshake() << endl;
 		string msg = JsonObjectMapper::getMsgSendGameState(&c_rumbas, &rumba, &equipments);
@@ -54,6 +55,7 @@ int main(int argc, char* argv[]) {
 		if(tuple.getFst() == 'D') JsonObjectMapper::setGameState(tuple.getSnd(), &c_rumbas, &rumba, &equipments);
 		cout << JsonObjectMapper::getMsgHandshake() << endl;
 		// ------- test ------- //
+		*/
 
 
 		if(SDL_PollEvent(&event)) {

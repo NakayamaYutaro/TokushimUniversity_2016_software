@@ -3,7 +3,7 @@ This repository contains documents and sources. Used at software training 2016.
 
 ## 実行方法
 ---  
-cd <ワーキングディレクトリのパス>/game/src/controller  
+cd <ワーキングディレクトリのパス>/game/src
 make build  
 cd <ワーキングディレクトリのパス>/game/bin
 * clientサイド: ./game.out C <サーバのIPアドレス>
