@@ -10,6 +10,8 @@
 #include "../utils/LinkedList.h"
 #include "../Setting.h"
 
+#include <iostream>
+
 class RunawayRumba : public Rumba {
 	private:
 		bool judgeCollision(Equipment* equipment);
@@ -25,6 +27,7 @@ class RunawayRumba : public Rumba {
 		void straight();
 		void calcSpeedVector(SDL_Rect field, LinkedList<Equipment>* equip_list, LinkedList<CustomizedRumba>* rumba_list);
 		Vector<float> getSpeedVec() { return speed_vec; }
+		bool isInEquipment(Equipment* equip);
 };
 
 Vector<float> RunawayRumba::getReflectedVector(Equipment* equipment) {
@@ -32,6 +35,8 @@ Vector<float> RunawayRumba::getReflectedVector(Equipment* equipment) {
 	Vector<int> tmp_vec;
 	int i;
 	for( i = 0; i < 4; i++) {
+
+		if( isInEquipment(equipment) ) break;
 
 		// r.f. http://marupeke296.com/COL_2D_No5_PolygonToCircle.html
 		Vector<int> S = list[(i+1)%4] - list[i];
@@ -59,10 +64,8 @@ Vector<float> RunawayRumba::getReflectedVector(Equipment* equipment) {
 }
 
 Vector<float> RunawayRumba::getReflectedVector(CustomizedRumba* rumba) {
-	Vector<float> tmp_vec = rumba->getCenterPos() - center_pos;
+	Vector<float> tmp_vec = center_pos - rumba->getCenterPos();
 	if( tmp_vec.getMagnitude() < (rumba->getRadius() + radius)) {
-		tmp_vec /= tmp_vec.getMagnitude();
-		tmp_vec *= (-1 * rumba->getSpeedVector().getMagnitude());
 		return tmp_vec;
 	}
 	return Vector<float>(0, 0);
@@ -101,6 +104,15 @@ void RunawayRumba::calcSpeedVector(SDL_Rect field, LinkedList<Equipment>* equip_
 	tmp_vec /= tmp_vec.getMagnitude();
 	tmp_vec *= ROOMBA_SPEED;
 	speed_vec = tmp_vec;
+}
+bool RunawayRumba::isInEquipment(Equipment* equip) {
+		Vector<int>* appexes = equip->getAllApexes();
+		bool is_in = 
+			( appexes[0].getX() < center_pos.getX()
+				 && center_pos.getX() < appexes[2].getX() ) &&
+			( appexes[0].getY() < center_pos.getY()
+				&& center_pos.getY() < appexes[2].getY() );
+		return is_in;
 }
 
 #endif
