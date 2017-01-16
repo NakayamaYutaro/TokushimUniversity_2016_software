@@ -6,6 +6,7 @@
 #include "../models/RunawayRumba.h"
 #include "../models/CustomizedRumba.h"
 #include "../views/GameWindow.h"
+#include "../views/StartWindow.h"
 #include <stdlib.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_gfxPrimitives.h>
@@ -29,6 +30,19 @@ int main(int argc, char* argv[]) {
 	is_server = (argv[1][0] == 'S');
 	if(is_server) { player_num = atoi(argv[2]); }
 	else { ip_address = argv[2]; }
+
+	bool is_completed_connection = false;
+	int j = 0;
+	StartWindow s_window = StartWindow();
+	while(!is_completed_connection) {
+		s_window.updateWindow();
+		timer.wait2NextFrame();
+		j++;
+		if(SDL_PollEvent(&event)) {
+			if(event.type == SDL_QUIT) break;
+		}
+		if(j > 1200) break;
+	}
 
 	// --- initialize each object --- //
 	GameWindow window = GameWindow(2, 2);
@@ -74,8 +88,7 @@ int main(int argc, char* argv[]) {
 		window.updateObjects(&rumba, &c_rumbas, &equipments);
 		window.updateWindow();
 
-
-		timer.sleep();						// sleep for keep framerate constantly
+		timer.wait2NextFrame();		// sleep for keep framerate constantly
 	}
 
 	SDL_Quit();

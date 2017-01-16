@@ -18,24 +18,28 @@
 #define GAME_WINDOW_HEIGHT 800
 // ------ for window ------ //
 
-// ------ image path ------ //
+// ------ for network ------ //
+#define NETWORK_INTERFACE "eth0"
+// ------ for network ------ //
+
+// ------ start window ------ //
+#define TIME_SEC_SHOW_TITLE 5
+#define TITLE_IMG_PATH "../assets/title.png" 
+#define SCINARIO_IMG_PATH "../assets/scinario.png" 
+// ------ start window ------ //
+
+// ------ game window ------ //
 #define GAME_WINDOW_BACKGROUND_PATH "../assets/ground.png"
 #define RUNAWAY_ROOMBA_IMG_PATH "../assets/roomba3.png"
 #define CUSTOMIZED_ROOMBA_IMG_PATH "../assets/roomba2.png"
 #define EQUIPMENT_RIGHT_SIDE_IMG_PATH "../assets/equipment1.png"
 #define EQUIPMENT_LEFT_SIDE_IMG_PATH "../assets/equipment2.png"
 #define LIFE_PANEL_IMG_PATH "../assets/lifepanel.png"
-// ------ image path ------ //
 
-// ------ for image ------ //
 #define EQUIPMENT_WIDTH 171
 #define EQUIPMENT_HEIGHT 264
 #define LIFE_PANEL_WIDTH 200
 #define LIFE_PANEL_HEIGHT 141
-// ------ for image ------ //
-
-// ------ for network ------ //
-#define NETWORK_INTERFACE "eth0"
-// ------ for network ------ //
+// ------ game window ------ //
 
 #endif

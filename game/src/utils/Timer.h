@@ -11,7 +11,7 @@ class Timer {
 		unsigned int rest;
 	public:
 		Timer() { prev = now = SDL_GetTicks(); }
-		void sleep() {
+		void wait2NextFrame() {
 			now = SDL_GetTicks();
 			rest = now - prev;
 			if(rest < TERM_ONE_FRAME_MS) SDL_Delay(rest);
