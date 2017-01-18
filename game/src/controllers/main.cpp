@@ -30,6 +30,9 @@ int main(int argc, char* argv[]) {
 	if(is_server) { player_num = atoi(argv[2]); }
 	else { ip_address = argv[2]; }
 
+	SDL_Init(SDL_INIT_EVERYTHING);
+	TTF_Init();
+
 	// --- initialize each object --- //
 	GameWindow window = GameWindow(2, 2);
 	LinkedList<CustomizedRumba> c_rumbas = LinkedList<CustomizedRumba>();
@@ -40,8 +43,6 @@ int main(int argc, char* argv[]) {
 	c_rumbas.add( CustomizedRumba( rumba.getCenterPos().getX() + 180, rumba.getCenterPos().getY() - 180) );
 	for(i = 0; i < 2; i++) equipments.add(Equipment(i));
 	// --- initialize each object --- //
-
-	SDL_Init(SDL_INIT_EVERYTHING);
 
 	while(!is_finished) {
 
@@ -74,11 +75,12 @@ int main(int argc, char* argv[]) {
 		window.updateObjects(&rumba, &c_rumbas, &equipments);
 		window.updateWindow();
 
-
 		timer.sleep();						// sleep for keep framerate constantly
 	}
 
+	TTF_Quit();
 	SDL_Quit();
+
 	return EXIT_SUCCESS;
 
 }

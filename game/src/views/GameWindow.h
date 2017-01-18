@@ -10,6 +10,10 @@
 #include "../models/RunawayRumba.h"
 #include "../models/CustomizedRumba.h"
 #include "../models/Equipment.h"
+#include <SDL/SDL_ttf.h>
+#include <iostream>
+
+using namespace std;
 
 class GameWindow : public Window {
 	private:
@@ -17,10 +21,13 @@ class GameWindow : public Window {
 		LinkedList<EquipmentPanel> equip_panel_list;
 		LinkedList<LifePanel> life_panel_list;
 		SDL_Rect field_rect;
+		TTF_Font* font;
 		void drawObjects();
+		void initFont();
 	public:
-		GameWindow() : Window(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, (char*)GAME_WINDOW_BACKGROUND_PATH) {}
+		GameWindow() : Window(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, (char*)GAME_WINDOW_BACKGROUND_PATH) { initFont(); }
 		GameWindow(int num_of_player, int team_num);
+		~GameWindow() { TTF_CloseFont(font); }
 		void updateWindow();
 		void updateObjects(RunawayRumba *roomba, LinkedList<CustomizedRumba> *c_rumba_list, LinkedList<Equipment> *equip_list);
 		SDL_Rect getFieldRect() { return field_rect; }
@@ -32,8 +39,17 @@ void GameWindow::updateWindow() {
 	SDL_Flip(window);
 }
 
+void GameWindow::initFont() {
+	font = TTF_OpenFont((const char*)FONT_PATH, 36);
+	if(font == NULL) {
+		cerr << TTF_GetError() << endl;
+		exit(1);
+	}
+}
+
 GameWindow::GameWindow(int num_of_player, int team_num) :
 	Window(GAME_WINDOW_WIDTH, GAME_WINDOW_WIDTH, (char*)GAME_WINDOW_BACKGROUND_PATH) {
+	initFont();
 	int i;
 	rumba_panel_list = LinkedList<RumbaPanel>();
 	equip_panel_list = LinkedList<EquipmentPanel>();
@@ -80,10 +96,9 @@ void GameWindow::drawObjects() {
 	equip_panel_list.resetCurrent();
 	rumba_panel_list.resetCurrent();
 	life_panel_list.resetCurrent();
-	using namespace std;
-	for(i = 0; i < equip_panel_list.getSize(); i++) equip_panel_list.get(i).drawPanel(window);
 	for(i = 0; i < rumba_panel_list.getSize(); i++) rumba_panel_list.get(i).drawPanel(window);
-	for(i = 0; i < life_panel_list.getSize(); i++) life_panel_list.get(i).drawPanel(window);
+	for(i = 0; i < equip_panel_list.getSize(); i++) equip_panel_list.get(i).drawPanel(window);
+	for(i = 0; i < life_panel_list.getSize(); i++) life_panel_list.get(i).drawPanel(window, font);
 }
 
 #endif
