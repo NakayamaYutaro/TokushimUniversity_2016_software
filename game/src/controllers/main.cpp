@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
 		if( communicator->handshake() ) break;
 	}
 
-	// ---  --- //
+	// --- ゲーム開始 --- //
 	SDL_Init(SDL_INIT_EVERYTHING);
 	GameWindow window = GameWindow(player_num, 2);
 
@@ -80,21 +80,27 @@ int main(int argc, char* argv[]) {
 
 		if(SDL_PollEvent(&event)) {
 			switch(event.type) {
-				case SDL_QUIT:				// clicked quit buttom
+				case SDL_QUIT:				// バツボタンをクリック
 					is_finished = true;
 					break;
 			}
 		}
 
-		// behave each object
-		rumba.calcSpeedVector(window.getFieldRect(), equipments, c_rumbas);
+		// 次のフレームの各ルンバの挙動，設備のライフの減算を行う
+		rumba.calcSpeedVector(window.getFieldRect(), &equipments, c_rumbas);
 		rumba.straight();
 
-		// reflect to views
+		// ゲームの状況をクライアントに送信
+		communicator->sendData( JsonObjectMapper::getMsgSendGameState( c_rumbas, rumba, equipments) );
+
+		// ゲームの状況を画面に反映
 		window.updateObjects(rumba, c_rumbas, equipments);
 		window.updateWindow();
 
-		timer.wait2NextFrame();		// sleep for keep framerate constantly
+		cout << equipments[0].getLife() << endl;
+
+		// 次のフレームまで待機
+		timer.wait2NextFrame();
 	}
 
 	SDL_Quit();
