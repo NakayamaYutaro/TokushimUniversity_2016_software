@@ -18,7 +18,6 @@ class StartWindow : public Window {
 };
 
 void StartWindow::updateWindow() {
-
 cout << init_time << endl;
 cout << difftime(now, init_time) << endl;
 cout << difftime(init_time, now) << endl;

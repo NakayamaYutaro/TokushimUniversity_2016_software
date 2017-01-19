@@ -20,6 +20,10 @@
 
 // ------ for network ------ //
 #define NETWORK_INTERFACE "eth0"
+#define CLIENT_DEST_PORT 8080
+#define CLIENT_RECV_PORT 6060
+#define SERVER_DEST_PORT 6060
+#define SERVER_RECV_PORT 8080
 // ------ for network ------ //
 
 // ------ start window ------ //

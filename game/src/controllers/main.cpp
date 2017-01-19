@@ -5,6 +5,7 @@
 #include "../utils/JsonObjectsMapper.h"
 #include "../models/RunawayRumba.h"
 #include "../models/CustomizedRumba.h"
+#include "../models/ServerCommunicator.h"
 #include "../views/GameWindow.h"
 #include "../views/StartWindow.h"
 #include <stdlib.h>
@@ -23,44 +24,49 @@ int main(int argc, char* argv[]) {
 	Timer timer = Timer();
 	SDL_Event event;
 
-	if(argc < 3) {		// validate arguments from consoe
-		cerr << "Arguments is not enough!!\n(least 3 args)" << endl;
+	vector<CustomizedRumba> c_rumbas;
+	vector<Equipment> equipments;
+	RunawayRumba rumba = RunawayRumba( GAME_WINDOW_WIDTH/2 , GAME_WINDOW_HEIGHT/2);
+
+	// --- コマンドライン引数のバリデーション --- //
+	if(argc < 3) {
+		cerr << "Arguments are not enough!!\n(least 3 args)" << endl;
 		exit(1);
 	}
 	is_server = (argv[1][0] == 'S');
 	if(is_server) { player_num = atoi(argv[2]); }
 	else { ip_address = argv[2]; }
 
-	bool is_completed_connection = false;
-	int j = 0;
-	StartWindow s_window = StartWindow();
-	while(!is_completed_connection) {
-		s_window.updateWindow();
-		timer.wait2NextFrame();
-		j++;
-		if(SDL_PollEvent(&event)) {
-			if(event.type == SDL_QUIT) break;
-		}
-		if(j > 1200) break;
+	// --- 各オブジェクトの初期化 --- //
+	for(i = 0; i < 2; i++) equipments.push_back(Equipment(i));
+	for(i = 0; i < player_num; i++) {
+		c_rumbas.push_back( CustomizedRumba( i*200 , i*200) );
 	}
 
-	// --- initialize each object --- //
-	GameWindow window = GameWindow(2, 2);
-	LinkedList<CustomizedRumba> c_rumbas = LinkedList<CustomizedRumba>();
-	LinkedList<Equipment> equipments = LinkedList<Equipment>();
-	RunawayRumba rumba = RunawayRumba( GAME_WINDOW_WIDTH/2 , GAME_WINDOW_HEIGHT/2);
+	StartWindow s_window = StartWindow();
 
-	c_rumbas.add( CustomizedRumba( rumba.getCenterPos().getX() , rumba.getCenterPos().getY() + 100) );
-	c_rumbas.add( CustomizedRumba( rumba.getCenterPos().getX() + 180, rumba.getCenterPos().getY() - 180) );
-	for(i = 0; i < 2; i++) equipments.add(Equipment(i));
-	// --- initialize each object --- //
+	// --- 各クラアントとハンドシェイク --- //
+	Communicator* communicator = new ServerCommunicator( c_rumbas, equipments, rumba, player_num-1 );
+	while(true) {
+		s_window.updateWindow();
+		if(SDL_PollEvent(&event)) {
+			if(event.type == SDL_QUIT) {
+				SDL_Quit();
+				return EXIT_SUCCESS;
+			}
+		}
+		// 全クライアントとハンドシェイク終了でbreak
+		if( communicator->handshake() ) break;
+	}
 
+	// ---  --- //
 	SDL_Init(SDL_INIT_EVERYTHING);
+	GameWindow window = GameWindow(player_num, 2);
 
 	while(!is_finished) {
 
-/*
 		// ------- test ------- //
+		/*
 		cout << JsonObjectMapper::getMsgHandshake() << endl;
 		string msg = JsonObjectMapper::getMsgSendGameState(&c_rumbas, &rumba, &equipments);
 		cout << msg << endl;
@@ -68,8 +74,8 @@ int main(int argc, char* argv[]) {
 		Tuple<char, picojson::object> tuple = JsonObjectMapper::parseJsonMsg(msg);
 		if(tuple.getFst() == 'D') JsonObjectMapper::setGameState(tuple.getSnd(), &c_rumbas, &rumba, &equipments);
 		cout << JsonObjectMapper::getMsgHandshake() << endl;
-		// ------- test ------- //
 		*/
+		// ------- test ------- //
 
 
 		if(SDL_PollEvent(&event)) {
@@ -81,11 +87,11 @@ int main(int argc, char* argv[]) {
 		}
 
 		// behave each object
-		rumba.calcSpeedVector(window.getFieldRect(), &equipments, &c_rumbas);
+		rumba.calcSpeedVector(window.getFieldRect(), equipments, c_rumbas);
 		rumba.straight();
 
 		// reflect to views
-		window.updateObjects(&rumba, &c_rumbas, &equipments);
+		window.updateObjects(rumba, c_rumbas, equipments);
 		window.updateWindow();
 
 		timer.wait2NextFrame();		// sleep for keep framerate constantly
