@@ -1,8 +1,7 @@
-CXXFLAGS = -D_GLIBCXX_DEBUG -std=c++11 -Wall -Wextra -v
-LDLIBS = -lCppUTest -lCppUTestExt
+CXXFLAGS = -D_GLIBCXX_DEBUG -Wall -Wextra -v
 
 .PHONY: test_model clean
 build:
-	g++ -o ../bin/game.out controllers/main.cpp -g -std=c++11 -lSDL -lSDL_image $(LDLIBS) $(CXXFLAGS)
+	g++ -o ../bin/game.out controllers/main.cpp -g -lSDL -lSDL_image $(CXXFLAGS)
 clean:
 	rm ../bin/*.out

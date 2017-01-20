@@ -30,16 +30,14 @@ class Window {
 };
 
 Window::Window(int w, int h, char* background_path) : width(w), height(h) {
-	width = w;
-	height = w;
-	if( (window = SDL_SetVideoMode(width, height, 32, SDL_SWSURFACE)) == NULL) {
+	if( (window = SDL_SetVideoMode(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, 32, SDL_SWSURFACE)) == NULL) {
 		std::cerr << "failed to initialize videomode.\n" << std::endl;
 		exit(-1);
 	}
 	background = IMG_Load(background_path);
 	if(background == NULL) {
-		std::cout << SDL_GetError() << std::endl;
-		std::exit(0);
+		std::cerr << SDL_GetError() << std::endl;
+		std::exit(-1);
 	}
 	// set game window's size and background size
 	win_rect.x = 0; win_rect.y = 0; 

@@ -10,7 +10,7 @@ class Node {
 	public:
 		Node<T>* next;
 		T value;
-		Node(T val) : next(nullptr), value(val) {}
+		Node(T val) : next(NULL), value(val) {}
 };
 
 template<typename T>
@@ -22,11 +22,11 @@ class LinkedList {
 		int size;
 		Node<T>* getElementByIndex(int index, string err_msg);
 	public:
-		LinkedList() : head(nullptr), last(nullptr) , current(nullptr), size(0) {}
+		LinkedList() : head(NULL), last(NULL) , current(NULL), size(0) {}
 		~LinkedList() {
 			Node<T>* tmp;
-			if(head == nullptr) return;
-			for(tmp = head; tmp->next != nullptr; tmp = tmp->next) delete tmp;
+			if(head == NULL) return;
+			for(tmp = head; tmp->next != NULL; tmp = tmp->next) delete tmp;
 		}
 		void add(T val);
 		T get(int index);
@@ -42,8 +42,8 @@ template<typename T>
 Node<T>* LinkedList<T>::getElementByIndex(int index, string err_msg) {
 	int i = 0;
 	Node<T>* node;
-	for(node = head; i < index && node != nullptr; i++) node = node->next;
-	if(node == nullptr) {
+	for(node = head; i < index && node != NULL; i++) node = node->next;
+	if(node == NULL) {
 		cerr << err_msg << "\nindex: " << index << endl;
 		exit(EXIT_FAILURE);
 	}
@@ -54,7 +54,7 @@ template<typename T>
 void LinkedList<T>::add(T val) {
 	Node<T>* node = new Node<T>(val);
 	size++;
-	if(head == nullptr) {
+	if(head == NULL) {
 		head = last = current = node;
 		return ;
 	}
@@ -72,14 +72,14 @@ T LinkedList<T>::get(int index) {
 template<typename T>
 T LinkedList<T>::get() {
 	Node<T>* node = current;
-	if(current->next != nullptr) current = current->next;
+	if(current->next != NULL) current = current->next;
 	return node->value;
 }
 
 template<typename T>
 T* LinkedList<T>::getPtr() {
 	Node<T>* node = current;
-	if(current->next != nullptr) current = current->next;
+	if(current->next != NULL) current = current->next;
 	return &(node->value);
 }
 

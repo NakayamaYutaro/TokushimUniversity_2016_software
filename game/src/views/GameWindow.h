@@ -19,7 +19,7 @@ class GameWindow : public Window {
 		SDL_Rect field_rect;
 		void drawObjects();
 	public:
-		GameWindow() : Window(GAME_WINDOW_WIDTH, GAME_WINDOW_WIDTH, (char*)GAME_WINDOW_BACKGROUND_PATH) {}
+		GameWindow() : Window(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, (char*)GAME_WINDOW_BACKGROUND_PATH) {}
 		GameWindow(int num_of_player, int team_num);
 		void updateWindow();
 		void updateObjects(RunawayRumba *roomba, LinkedList<CustomizedRumba> *c_rumba_list, LinkedList<Equipment> *equip_list);
