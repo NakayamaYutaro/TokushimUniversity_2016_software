@@ -31,6 +31,9 @@ int main(int argc, char* argv[]) {
 	vector<Equipment> equipments;
 	RunawayRumba rumba = RunawayRumba( GAME_WINDOW_WIDTH/2 , GAME_WINDOW_HEIGHT/2);
 
+	SDL_Init(SDL_INIT_EVERYTHING);
+	TTF_Init();
+
 	// --- コマンドライン引数のバリデーション --- //
 	if(argc < 3) {
 		cerr << "Arguments are not enough!!\n(least 3 args)" << endl;
@@ -70,7 +73,6 @@ int main(int argc, char* argv[]) {
 	client_id = communicator->getClientID();
 
 	// --- ゲーム開始 --- //
-	SDL_Init(SDL_INIT_EVERYTHING);
 	GameWindow window = GameWindow(player_num, 2);
 
 	// フィールド状況のデータ受信の開始

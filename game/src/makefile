@@ -1,5 +1,5 @@
 CXXFLAGS = -D_GLIBCXX_DEBUG -Wall -Wextra -v
-SDLFLAGS =  -lSDL -lSDL_image
+SDLFLAGS =  -lSDL -lSDL_image -lSDL_ttf
 
 .PHONY: test_model clean
 build:

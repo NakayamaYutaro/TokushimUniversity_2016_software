@@ -89,7 +89,7 @@ void GameWindow::drawObjects() {
 	using namespace std;
 	for(i = 0; i < equip_panel_list.size(); i++) equip_panel_list[i].drawPanel(window);
 	for(i = 0; i < rumba_panel_list.size(); i++) rumba_panel_list[i].drawPanel(window);
-	for(i = 0; i < life_panel_list.size(); i++) life_panel_list[i].drawPanel(window);
+	for(i = 0; i < life_panel_list.size(); i++) life_panel_list[i].drawPanel(window, font);
 }
 
 #endif
