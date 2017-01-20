@@ -7,9 +7,17 @@
 #include <libcwiimote/wiimote.h>	// Wiiリモコンを用いるために必要なヘッダファイル
 #include <libcwiimote/wiimote_api.h>	// Wiiリモコンを用いるために必要なヘッダファイル
 
-
 #define FIELD_WIDTH 800
 #define FIELD_HEIGHT 800
+#define POINT_X_MIN 0
+#define POINT_X_MAX 1791
+#define POINT_Y_MIN 0
+#define POINT_Y_MAX 1272
+
+void map2Field(int x1, int y1, int* x2, int* y2) {
+	*x2 = x1 * FIELD_WIDTH / (POINT_X_MAX - POINT_X_MIN);
+	*y2 = y1 * FIELD_HEIGHT / (POINT_Y_MAX - POINT_Y_MIN);
+}
 
 // メイン関数
 int main(int argc, char* argv[]) {
@@ -30,14 +38,14 @@ int main(int argc, char* argv[]) {
 	}
 
 	wiimote.led.one  = 1;	// WiiリモコンのLEDの一番左を点灯させる（接続を知らせるために）
-	// wiimote.led.four  = 1;	// WiiリモコンのLEDの一番右を点灯させる
+	//wiimote.led.four  = 1;	// WiiリモコンのLEDの一番右を点灯させる
 
 	// Wiiリモコンスピーカの初期化
 	//wiimote_speaker_init(&wiimote, WIIMOTE_FMT_S4, WIIMOTE_FREQ_44800HZ);
 
         // センサからのデータを受け付けるモードに変更
         wiimote.mode.acc = 1;
-	wiimote.mode.ir=1;
+	wiimote.mode.ir = 1;
 
 	// Wiiリモコンがオープン（接続状態）であればループ
 	while(wiimote_is_open(&wiimote)) {
