@@ -25,7 +25,6 @@ class ServerCommunicator : public Communicator {
 		bool handshake();
 		void sendData(string msg);
 		void startReceiving();
-		void stopReceiving();
 		static void* receiveThread(void* args);
 };
 
@@ -36,8 +35,6 @@ ServerCommunicator::ServerCommunicator(
 		unsigned int arg_client_num
 	) : Communicator(p_c_rumbas, p_equipments, p_rumba), client_num(arg_client_num) {
 
-using namespace std;
-
 	recv_sock = socket(AF_INET, SOCK_DGRAM, 0);
 	send_sock = socket(AF_INET, SOCK_DGRAM, 0);
 
@@ -46,6 +43,8 @@ using namespace std;
 	recv_addr.sin_addr.s_addr = INADDR_ANY;
 
 	bind(recv_sock, (struct sockaddr*)&recv_addr, sizeof(recv_addr));
+
+	client_id = 0;
 
 }
 
@@ -66,7 +65,7 @@ bool ServerCommunicator::handshake() {
 			clients.push_back(tmp_addr);
 			// クライアントにIDを返信
 			ostringstream stream;
-			stream <<  "{\"cmd\":" << i+1 << "}";
+			stream <<  "{\"cmd\":\"" << CMD_HANDSHAKE << "\",  \"ID\":" << i+1 << " }";
 			sendData(tmp_addr, stream.str());
 			cout << "Connected from: " << inet_ntoa(tmp_addr.sin_addr) << ':' << ntohs(tmp_addr.sin_port) << '\n' << buf << endl;
 		}
@@ -75,16 +74,28 @@ bool ServerCommunicator::handshake() {
 }
 
 void* ServerCommunicator::receiveThread(void* args) {
-	socklen_t addrlen;
-	sockaddr_in tmp_addr;
-
+	Pack4Thread* arg = static_cast<Pack4Thread*>(args);
 	while(true) {
+		char buf[BUFFER_SIZE];
+		memset(buf, 0, sizeof(buf));
+		if( recv( *(arg->p_sock), buf, sizeof(buf), 0) > 0 ) {
+			string tmp_msg = buf;
+			picojson::object params = JsonObjectMapper::unmarshal(tmp_msg);
+			// クライアントから操作する改造ルンバの位置情報が送られてきたときに更新
+			if( params["cmd"].get<string>() == CMD_DISTRIBUTE_DATA ) {
+				int c_id = static_cast<int>( params["ID"].get<double>() );
+				pthread_mutex_lock(arg->p_mutex_handler);
+				arg->p_c_rumbas->at(c_id).setCenterPos(
+					Vector<float>(
+						static_cast<float>( params["x"].get<double>() ),
+						static_cast<float>( params["y"].get<double>() )
+					)
+				);
+				pthread_mutex_unlock(arg->p_mutex_handler);
+			}
+		}
 	}
 
-}
-
-Triple< vector<CustomizedRumba>, vector<Equipment>, RunawayRumba > ServerCommunicator::readData() {
-	return Triple< vector<CustomizedRumba>, vector<Equipment>, RunawayRumba >(c_rumbas, equipments, rumba);
 }
 
 void ServerCommunicator::sendData(sockaddr_in addr, string msg) {
@@ -95,18 +106,14 @@ void ServerCommunicator::sendData(sockaddr_in addr, string msg) {
 }
 
 void ServerCommunicator::sendData(string msg) {
-	for( unsigned int i = 0; i < clients.size(); i++ ) {
-		sendData(clients[i], msg);
-	}
+	for( unsigned int i = 0; i < clients.size(); i++ ) sendData(clients[i], msg);
 }
 
 void ServerCommunicator::startReceiving() {
-	pthread_mutex_init( &mutex_handler, NULL );
-	pthread_create( &thread_handler, NULL, &receiveThread, NULL );
-}
-void ServerCommunicator::stopReceiving() {
-	pthread_cancel(thread_handler);
-	pthread_join(thread_handler, NULL);
+	pthread_mutex_init(&mutex_handler, NULL);
+	pthread_create(&thread_handler, NULL, &ServerCommunicator::receiveThread,
+		new Pack4Thread(&recv_sock, &c_rumbas, &equipments, &rumba, &mutex_handler)
+	);
 }
 
 #endif

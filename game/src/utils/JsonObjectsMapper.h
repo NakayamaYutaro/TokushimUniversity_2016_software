@@ -1,10 +1,6 @@
 #ifndef JSON_OBJECTS_MAPPER_H
 #define JSON_OBJECTS_MAPPER_H
 
-#include <iostream>
-#include <cstdlib>
-#include <sstream>
-#include <iomanip>
 #include "picojson/picojson.h"
 #include "LinkedList.h"
 #include "Tuple.h"
@@ -12,28 +8,27 @@
 #include "../models/RunawayRumba.h"
 #include "../models/CustomizedRumba.h"
 #include "../models/Equipment.h"
+#include <iostream>
+#include <cstdlib>
+#include <sstream>
+#include <iomanip>
+
+#define CMD_HANDSHAKE "H"
+#define CMD_GAMESTART "S"
+#define CMD_DISTRIBUTE_DATA "D"
+#define CMD_GAMEFINISH "E"
 
 using namespace std;
 
 namespace JsonObjectMapper {
 
-			Tuple<char, picojson::object> parseJsonMsg(string json);
+	picojson::object unmarshal(string json);
 
-			// ---- methods for client --- //
-			string getMsgHandshake();
-			// ---- methods for client --- //
-
-			// ---- methods for server --- //
-			// get json msg : send each rumba and life of equipment
-			string getMsgSendGameState(vector<CustomizedRumba> roombas, RunawayRumba roomba, vector<Equipment> equipments);
-			// set from json msg : send each rumba and life of equipment
-			void setGameState(picojson::object game_state, vector<CustomizedRumba>* c_roombas, RunawayRumba* r_roomba, vector<Equipment>* equipments);
-			// ---- methods for server --- //
-}
-
-
-string JsonObjectMapper::getMsgHandshake() {
-		return "{\"cmd\":\"H\"}";
+	string getMsgSendGameState(vector<CustomizedRumba> roombas, RunawayRumba roomba, vector<Equipment> equipments);
+	// set from json msg : send each rumba and life of equipment
+	void setGameState(picojson::object game_state, vector<CustomizedRumba>* c_roombas, RunawayRumba* r_roomba, vector<Equipment>* equipments);
+	// ---- methods for server --- //
+	string getMyRoombaMsg(int client_id, CustomizedRumba roomba);
 }
 
 string JsonObjectMapper::getMsgSendGameState(vector<CustomizedRumba> roombas, RunawayRumba roomba, vector<Equipment> equipments) {
@@ -61,7 +56,7 @@ string JsonObjectMapper::getMsgSendGameState(vector<CustomizedRumba> roombas, Ru
 	return msg.str();
 }
 
-Tuple<char, picojson::object> JsonObjectMapper::parseJsonMsg(string json) {
+picojson::object JsonObjectMapper::unmarshal(string json) {
 
 	picojson::value jsonval;
 	string err_msg = parse(jsonval, json);
@@ -71,8 +66,8 @@ Tuple<char, picojson::object> JsonObjectMapper::parseJsonMsg(string json) {
 	}
 
 	picojson::object data = jsonval.get<picojson::object>();
-	string cmd = data["cmd"].get<string>();
-	return Tuple<char, picojson::object>( (cmd.c_str())[0], data );
+	//string cmd = data["cmd"].get<string>();
+	return data;
 
 }
 
@@ -86,6 +81,14 @@ void JsonObjectMapper::setGameState(picojson::object game_state, vector<Customiz
 	}
 	picojson::array life_data = game_state["life"].get<picojson::array>();
 	for(i = 0; i < life_data.size(); i++) equipments->at(i).setLife( (int)(life_data[i].get<double>()) );
+}
+
+string JsonObjectMapper::getMyRoombaMsg(int client_id, CustomizedRumba roomba) {
+	stringstream ss;
+	Vector<float> pos = roomba.getCenterPos();
+	ss << "{\"cmd\":\"" << CMD_DISTRIBUTE_DATA <<"\", \"ID\":" << client_id;
+	ss << ", \"x\":" << pos.getX() << ",\"y\":" << pos.getY() << "}";
+	return ss.str();
 }
 
 #endif
