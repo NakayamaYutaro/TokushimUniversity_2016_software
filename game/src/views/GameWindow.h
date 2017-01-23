@@ -48,7 +48,7 @@ void GameWindow::initFont() {
 }
 
 GameWindow::GameWindow(int num_of_player, int team_num) :
-	Window(GAME_WINDOW_WIDTH, GAME_WINDOW_WIDTH, (char*)GAME_WINDOW_BACKGROUND_PATH) {
+	Window(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, (char*)GAME_WINDOW_BACKGROUND_PATH) {
 	initFont();
 	int i;
 	rumba_panel_list = vector<RumbaPanel>();
@@ -86,10 +86,11 @@ void GameWindow::updateObjects(RunawayRumba roomba, vector<CustomizedRumba> c_ru
 // --- private ---
 void GameWindow::drawObjects() {
 	unsigned int i;
-	using namespace std;
 	for(i = 0; i < equip_panel_list.size(); i++) equip_panel_list[i].drawPanel(window);
 	for(i = 0; i < rumba_panel_list.size(); i++) rumba_panel_list[i].drawPanel(window);
+	cout << "equip" << endl;
 	for(i = 0; i < life_panel_list.size(); i++) life_panel_list[i].drawPanel(window, font);
+	cout << "equip" << endl;
 }
 
 #endif

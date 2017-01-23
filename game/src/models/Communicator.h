@@ -32,7 +32,7 @@ class Communicator {
 	protected:
 		int send_sock, recv_sock;
 		int client_id;
-		pthread_mutex_t mutex_handler = PTHREAD_MUTEX_INITIALIZER;
+		pthread_mutex_t mutex_handler;
 		pthread_t thread_handler;
 
 		vector<CustomizedRumba> c_rumbas;
@@ -44,7 +44,7 @@ class Communicator {
 			vector<CustomizedRumba> p_c_rumbas,
 			vector<Equipment> p_equipments,
 			RunawayRumba p_rumba
-		) : c_rumbas(p_c_rumbas), equipments(p_equipments), rumba(p_rumba) { }
+		) : c_rumbas(p_c_rumbas), equipments(p_equipments), rumba(p_rumba), mutex_handler(PTHREAD_MUTEX_INITIALIZER) { }
 
 		int getClientID() { return client_id; };
 		virtual bool handshake() { return true; };
