@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
 		cerr << "Arguments are not enough!!\n(least 3 args)" << endl;
 		exit(1);
 	}
-	is_server = (argv[1][0] == 'S');
+	is_server = (argv[1][0] == 'S' || argv[1][0] == 's');
 	if(is_server) { player_num = atoi(argv[2]); }
 	else { ip_address = argv[2]; }
 	cout << "start game as a " << (is_server ? "server" : "client") << "!" << endl;

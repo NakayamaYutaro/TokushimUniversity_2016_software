@@ -66,7 +66,6 @@ picojson::object JsonObjectMapper::unmarshal(string json) {
 	}
 
 	picojson::object data = jsonval.get<picojson::object>();
-	//string cmd = data["cmd"].get<string>();
 	return data;
 
 }

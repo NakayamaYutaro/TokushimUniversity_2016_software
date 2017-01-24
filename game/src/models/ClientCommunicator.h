@@ -91,15 +91,29 @@ void* ClientCommunicator::receiveThread(void* args) {
 	while(true) {
 		char buf[BUFFER_SIZE];
 		memset(buf, 0, sizeof(buf));
+
 		if( recv(*(arg->p_sock), buf, sizeof(buf), 0) > 0 ) {
 			string msg_buf = buf;
 			picojson::object params = JsonObjectMapper::unmarshal(msg_buf);
+
 			if( params["cmd"].get<string>() == CMD_DISTRIBUTE_DATA ) {
 				pthread_mutex_lock(arg->p_mutex_handler);
-				JsonObjectMapper::setGameState( params, arg->p_c_rumbas, arg->p_rumba, arg->p_equipments);
+				// --- this code same as JsonObjectMapper::setGameState --- //
+				picojson::array roomba_data = params["roombas"].get<picojson::array>();
+				unsigned int i;
+				for(i = 0; i < roomba_data.size(); i++) {
+					picojson::array status = roomba_data[i].get<picojson::array>();
+					Rumba* rumba = (i != roomba_data.size()-1) ? (Rumba*)( &(arg->p_c_rumbas->at(i)) ) : (Rumba*)arg->p_rumba;
+					rumba->setCenterPos( Vector<float>( (float)(status.at(1).get<double>()), (float)(status.at(2).get<double>()) ) );
+				}
+				picojson::array life_data = params["life"].get<picojson::array>();
+				for(i = 0; i < life_data.size(); i++) arg->p_equipments->at(i).setLife( (int)(life_data[i].get<double>()) );
+				// --- this code same as JsonObjectMapper::setGameState --- //
 				pthread_mutex_unlock(arg->p_mutex_handler);
 			}
+
 		}
+
 	}
 }
 void ClientCommunicator::startReceiving() {
