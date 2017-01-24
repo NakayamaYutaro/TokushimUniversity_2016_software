@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
 	client_id = communicator->getClientID();
 
 	// --- ゲーム開始 --- //
-	GameWindow window = GameWindow(player_num, 2);
+	GameWindow window = GameWindow(client_id, player_num, 2);
 
 	// フィールド状況のデータ受信の開始
 	communicator->startReceiving();
