@@ -11,7 +11,7 @@
 #define FONT_PATH "../assets/SNsanafonObiV250.ttf"
 
 // ------ for field ------ //
-#define GAME_FIELD_WIDTH 1500
+#define GAME_FIELD_WIDTH 3000
 #define GAME_FIELD_HEIGHT 800
 // ------ for field ------ //
 

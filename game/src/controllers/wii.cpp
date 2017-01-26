@@ -7,8 +7,14 @@
 #include <libcwiimote/wiimote.h>	// Wiiリモコンを用いるために必要なヘッダファイル
 #include <libcwiimote/wiimote_api.h>	// Wiiリモコンを用いるために必要なヘッダファイル
 
-#define FIELD_WIDTH 800
+#define FIELD_WIDTH 3000
 #define FIELD_HEIGHT 800
+
+/*
+#define WINDOW_WIDTH 1500
+#define WINDOW_HEIGHT 800
+*/
+
 #define POINT_X_MIN 0
 #define POINT_X_MAX 1791
 #define POINT_Y_MIN 0

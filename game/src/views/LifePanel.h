@@ -28,11 +28,11 @@ class LifePanel : public Panel {
 
 		void setLife(int new_life) { life = new_life; }
 
-		void drawPanel(SDL_Surface* window, TTF_Font* font) {
+		void drawPanel(SDL_Surface* window, TTF_Font* font, int client_id) {
 
 			if(text_img != NULL) SDL_FreeSurface(text_img);
 
-			Panel::drawPanel(window);
+			Panel::drawPanel(window, client_id);
 
 			std::ostringstream converter;
 			converter << "life:" << life;
@@ -44,7 +44,12 @@ class LifePanel : public Panel {
 			}
 
 			SDL_Rect src_rect = { 0, 0, static_cast<Uint16>(text_img->w), static_cast<Uint16>(text_img->h) };
-			SDL_Rect dest_rect = { static_cast<Sint16>(position.getX()+30), static_cast<Sint16>(position.getY()+50), static_cast<Uint16>(text_img->w), static_cast<Uint16>(text_img->h) };
+			SDL_Rect dest_rect = {
+				static_cast<Sint16>(position.getX()+30 - (GAME_WINDOW_WIDTH*client_id) ),
+				static_cast<Sint16>(position.getY()+50),
+				static_cast<Uint16>(text_img->w),
+				static_cast<Uint16>(text_img->h)
+			};
 
 			SDL_BlitSurface(text_img, &src_rect, window, &dest_rect);
 

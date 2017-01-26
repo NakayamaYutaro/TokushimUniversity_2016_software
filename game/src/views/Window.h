@@ -16,7 +16,7 @@ class Window {
 		int width;
 		int height;
 		SDL_Rect win_rect, src_rect;
-		void drawBackground() { SDL_BlitSurface(background, &src_rect, window, &win_rect); } 
+		void drawBackground() {	SDL_BlitSurface(background, &src_rect, window, &win_rect); } 
 	public:
 		Window(int w, int h, char* background_path);
 		~Window() {
