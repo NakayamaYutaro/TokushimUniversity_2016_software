@@ -39,6 +39,8 @@ ClientCommunicator::ClientCommunicator(
 	recv_addr.sin_addr.s_addr = INADDR_ANY;
 
 	recv_sock = socket(AF_INET, SOCK_DGRAM, 0);
+	int unblock_frag = 1;
+	ioctl(recv_sock, FIONBIO, &unblock_frag);
 	send_addr.sin_family = AF_INET;
 	send_addr.sin_port = htons(CLIENT_DEST_PORT);
 	send_addr.sin_addr.s_addr = inet_addr(server_ip.c_str());
@@ -79,7 +81,6 @@ bool ClientCommunicator::handshake() {
 		return (params["cmd"].get<string>() == CMD_GAMESTART);
 	}
 	return false;
-
 }
 void ClientCommunicator::sendData(string msg) {
 	socklen_t addrlen;

@@ -47,9 +47,7 @@ int main(int argc, char* argv[]) {
 
 	// --- 各オブジェクトの初期化 --- //
 	for(i = 0; i < 2; i++) equipments.push_back(Equipment(i));
-	for(i = 0; i < player_num; i++) {
-		c_rumbas.push_back( CustomizedRumba( i*200 , i*200) );
-	}
+	for(i = 0; i < player_num; i++) c_rumbas.push_back( CustomizedRumba( i*200 , i*200) );
 
 	StartWindow s_window = StartWindow();
 	
