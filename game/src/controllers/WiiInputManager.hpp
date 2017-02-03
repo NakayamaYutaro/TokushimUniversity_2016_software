@@ -37,7 +37,7 @@ WiiInputManager::WiiInputManager(char* wii_addr) {
 
 void WiiInputManager::map2Field(int x1, int y1) {
 	position = Vector<int> (
-		x1 * GAME_WINDOW_WIDTH / (POINT_X_MAX - POINT_X_MIN),
+		GAME_WINDOW_WIDTH - x1 * GAME_WINDOW_WIDTH / (POINT_X_MAX - POINT_X_MIN),
 		y1 * GAME_WINDOW_HEIGHT / (POINT_Y_MAX - POINT_Y_MIN)
 	);
 }

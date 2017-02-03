@@ -6,16 +6,24 @@
 
 class Timer {
 	private:
-		unsigned int now;
-		unsigned int prev;
+		unsigned int now_p, now_f;
+		unsigned int prev_p, prev_f;
 		unsigned int rest;
 	public:
-		Timer() { prev = now = SDL_GetTicks(); }
-		void wait2NextFrame() {
-			now = SDL_GetTicks();
-			rest = now - prev;
-			if(rest < TERM_ONE_FRAME_MS) SDL_Delay(rest);
-			prev = now;
+		Timer() { prev_f = now_f = prev_p = now_p = SDL_GetTicks(); }
+		void wait2NextPhysicsCalc() {
+			now_p = SDL_GetTicks();
+			rest = now_p - prev_p;
+			if(rest < PHYSICS_CALC_TERM) SDL_Delay(rest);
+			prev_p = now_p;
+		}
+		bool isWaitedOneFrame() {
+			now_f = SDL_GetTicks();
+			if( now_f - prev_f >= FRAME_TERM ) {
+				prev_f = now_f;
+				return true;
+			}
+			return false;
 		}
 };
 

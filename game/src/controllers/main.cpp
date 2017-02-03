@@ -97,7 +97,7 @@ int main(int argc, char* argv[]) {
 
 		quitMightClickedQuit(&event, window);
 
-		for(i = (is_server ? 0 : client_wii_num); i < wii_list.size(); i++) c_rumbas[i].setCenterPos( wii_list[i].getPos() );
+		for(i = client_id; i < wii_list.size(); i++) c_rumbas[i].setCenterPos( wii_list[i].getPos() );
 
 		if(is_server) {
 			// 次のフレームの各ルンバの挙動，設備のライフの減算を行う
@@ -121,9 +121,11 @@ int main(int argc, char* argv[]) {
 		}
 		// --- 自分以外のルンバなどのデータを反映 --- //
 
-		// ゲームの状況を画面に反映
-		window->updateObjects(rumba, c_rumbas, equipments);
-		window->updateWindow();
+		if( timer.isWaitedOneFrame() ) {
+			// ゲームの状況を画面に反映
+			window->updateObjects(rumba, c_rumbas, equipments);
+			window->updateWindow();
+		}
 
 		// どちらかのライフが0になればゲームを終了
 		for( i = 0; i < equipments.size(); i++ ) {
@@ -133,7 +135,7 @@ int main(int argc, char* argv[]) {
 		}
 
 		// 次のフレームまで待機
-		timer.wait2NextFrame();
+		timer.wait2NextPhysicsCalc();
 	}
 	delete window;
 
