@@ -9,6 +9,7 @@
 #include "../views/StartWindow.hpp"
 #include "../views/GameWindow.hpp"
 #include "../views/ResultWindow.hpp"
+#include "./WiiInputManager.hpp"
 #include <iostream>
 #include <sstream>
 #include <vector>
@@ -36,10 +37,11 @@ int main(int argc, char* argv[]) {
 	unsigned int i;
 	int client_id = 0;
 	unsigned int player_num = 2;
+	int client_wii_num = 1;
 	bool is_finished = false;
 	bool is_server = false;
 	string ip_address = "127.0.0.1";
-	vector<string> wii_addr;
+	vector<WiiInputManager> wii_list;
 	Timer timer = Timer();
 	SDL_Event event;
 
@@ -57,8 +59,8 @@ int main(int argc, char* argv[]) {
 	}
 	is_server = (argv[1][0] == 'S' || argv[1][0] == 's');
 	if(is_server) { player_num = atoi(argv[2]); }
-	else { ip_address = argv[2]; }																// クライアントならサーバのIPアドレスを取得
-	for(i = 3; i < argc; i++) { wii_addr.push_back(argv[i]); }		// WiiリモコンのMACアドレス取得
+	else { ip_address = argv[2]; }								// クライアントならサーバのIPアドレスを取得
+
 	cout << "start game as a " << (is_server ? "server" : "client") << "!" << endl;
 
 	// --- 各オブジェクトの初期化 --- //
@@ -81,6 +83,8 @@ int main(int argc, char* argv[]) {
 
 	client_id = communicator->getClientID();
 
+	for(i = 3; i < argc; i++) wii_list.push_back( WiiInputManager(argv[i]) ); 		// Wiiリモコンの準備
+
 	delete s_window;
 
 	// --- ゲーム開始 --- //
@@ -92,6 +96,8 @@ int main(int argc, char* argv[]) {
 	while(!is_finished) {
 
 		quitMightClickedQuit(&event, window);
+
+		for(i = (is_server ? 0 : client_wii_num); i < wii_list.size(); i++) c_rumbas[i].setCenterPos( wii_list[i].getPos() );
 
 		if(is_server) {
 			// 次のフレームの各ルンバの挙動，設備のライフの減算を行う
