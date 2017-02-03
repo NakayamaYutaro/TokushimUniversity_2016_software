@@ -73,7 +73,7 @@ bool ServerCommunicator::handshake() {
 			cout << "Connected from: " << inet_ntoa(tmp_addr.sin_addr) << ':' << ntohs(tmp_addr.sin_port) << '\n' << buf << endl;
 		}
 	}
-	return (clients.size() >= client_num);
+	return (clients.size() == client_num-1);
 }
 
 void* ServerCommunicator::receiveThread(void* args) {
