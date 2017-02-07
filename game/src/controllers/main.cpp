@@ -7,8 +7,11 @@
 #include "../models/ServerCommunicator.hpp"
 #include "../models/ClientCommunicator.hpp"
 #include "../views/StartWindow.hpp"
+<<<<<<< HEAD
+=======
 #include "../views/GameWindow.hpp"
 #include "../views/ResultWindow.hpp"
+>>>>>>> e18c893ad5beae4c22c833a5991cb898bf34e6fb
 #include "./WiiInputManager.hpp"
 #include <iostream>
 #include <sstream>
@@ -36,7 +39,11 @@ int main(int argc, char* argv[]) {
 
 	unsigned int i;
 	int client_id = 0;
+<<<<<<< HEAD
+	int player_num = 2;
+=======
 	unsigned int player_num = 2;
+>>>>>>> e18c893ad5beae4c22c833a5991cb898bf34e6fb
 	int client_wii_num = 1;
 	bool is_finished = false;
 	bool is_server = false;
@@ -60,12 +67,21 @@ int main(int argc, char* argv[]) {
 	is_server = (argv[1][0] == 'S' || argv[1][0] == 's');
 	if(is_server) { player_num = atoi(argv[2]); }
 	else { ip_address = argv[2]; }								// クライアントならサーバのIPアドレスを取得
+<<<<<<< HEAD
+	for(i = 3; i < argc; i++) wii_list.push_back( WiiInputManager(argv[i]) ); 		// Wiiリモコンの準備
+
+=======
+>>>>>>> e18c893ad5beae4c22c833a5991cb898bf34e6fb
 
 	cout << "start game as a " << (is_server ? "server" : "client") << "!" << endl;
 
 	// --- 各オブジェクトの初期化 --- //
 	for(i = 0; i < 2; i++) equipments.push_back(Equipment(i));
+<<<<<<< HEAD
+	for(i = 0; i < player_num; i++) c_rumbas.push_back( CustomizedRumba( i*200 , i*200) );
+=======
 	for(i = 0; i < player_num; i++) c_rumbas.push_back( CustomizedRumba( (i+1)*400 , (i+1)*400) );
+>>>>>>> e18c893ad5beae4c22c833a5991cb898bf34e6fb
 
 	StartWindow* s_window = new StartWindow();
 	
@@ -100,6 +116,8 @@ int main(int argc, char* argv[]) {
 		quitMightClickedQuit(&event, window);
 
 		for(i = client_id; i < wii_list.size(); i++) c_rumbas[i].setCenterPos( wii_list[i-client_id].getPos() );
+
+		for(i = (is_server ? 0 : client_wii_num); i < wii_list.size(); i++) c_rumbas[i].setCenterPos( wii_list[i].getPos() );
 
 		if(is_server) {
 			// 次のフレームの各ルンバの挙動，設備のライフの減算を行う
