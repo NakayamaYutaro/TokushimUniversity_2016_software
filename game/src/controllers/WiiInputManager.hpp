@@ -17,6 +17,7 @@ extern "C"{
 #define POINT_Y_MAX 1272
 
 class WiiInputManager {
+<<<<<<< HEAD
     private: 
 					Vector<int> position;
 					wiimote_t wiimote;
@@ -26,6 +27,17 @@ class WiiInputManager {
 					Vector<int> getPos();
 					WiiInputManager(char* wii_addr);
 					void updatePos();
+=======
+	private: 
+		Vector<int> position;
+		wiimote_t wiimote;
+		void map2Field(int x, int y);
+
+	public :
+		Vector<int> getPos();
+		WiiInputManager(char* wii_addr);
+		void updatePos();
+>>>>>>> e18c893ad5beae4c22c833a5991cb898bf34e6fb
 };
 
 WiiInputManager::WiiInputManager(char* wii_addr) {
@@ -37,7 +49,11 @@ WiiInputManager::WiiInputManager(char* wii_addr) {
 
 void WiiInputManager::map2Field(int x1, int y1) {
 	position = Vector<int> (
+<<<<<<< HEAD
 		x1 * GAME_WINDOW_WIDTH / (POINT_X_MAX - POINT_X_MIN),
+=======
+		GAME_WINDOW_WIDTH - x1 * GAME_WINDOW_WIDTH / (POINT_X_MAX - POINT_X_MIN),
+>>>>>>> e18c893ad5beae4c22c833a5991cb898bf34e6fb
 		y1 * GAME_WINDOW_HEIGHT / (POINT_Y_MAX - POINT_Y_MIN)
 	);
 }
@@ -50,9 +66,13 @@ Vector<int> WiiInputManager::getPos(){
 void WiiInputManager::updatePos() {
 
 	if(wiimote_is_open(&wiimote)) {
+<<<<<<< HEAD
 		if(wiimote_update(&wiimote) < 0) {
 			wiimote_disconnect(&wiimote);
 		}
+=======
+		if(wiimote_update(&wiimote) < 0) wiimote_disconnect(&wiimote);
+>>>>>>> e18c893ad5beae4c22c833a5991cb898bf34e6fb
 		map2Field( wiimote.ir1.x, wiimote.ir1.y );
 	}
 

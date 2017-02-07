@@ -6,8 +6,12 @@
 #include "../models/CustomizedRumba.hpp"
 #include "../models/ServerCommunicator.hpp"
 #include "../models/ClientCommunicator.hpp"
-#include "../views/GameWindow.hpp"
 #include "../views/StartWindow.hpp"
+<<<<<<< HEAD
+=======
+#include "../views/GameWindow.hpp"
+#include "../views/ResultWindow.hpp"
+>>>>>>> e18c893ad5beae4c22c833a5991cb898bf34e6fb
 #include "./WiiInputManager.hpp"
 #include <iostream>
 #include <sstream>
@@ -18,11 +22,28 @@
 
 using namespace std;
 
+void quitGame(Window* window) {
+	delete window;
+	TTF_Quit();
+	SDL_Quit();
+	exit(EXIT_SUCCESS);
+}
+
+void quitMightClickedQuit(SDL_Event* event, Window* window) {
+	if(SDL_PollEvent(event) && event->type == SDL_QUIT) {
+		quitGame(window);
+	}
+}
+
 int main(int argc, char* argv[]) {
 
-	int i;
+	unsigned int i;
 	int client_id = 0;
+<<<<<<< HEAD
 	int player_num = 2;
+=======
+	unsigned int player_num = 2;
+>>>>>>> e18c893ad5beae4c22c833a5991cb898bf34e6fb
 	int client_wii_num = 1;
 	bool is_finished = false;
 	bool is_server = false;
@@ -37,6 +58,7 @@ int main(int argc, char* argv[]) {
 
 	SDL_Init(SDL_INIT_EVERYTHING);
 	TTF_Init();
+	SDL_WM_SetCaption(GAME_TITLE, NULL);
 
 	if(argc < 4) {								 // コマンドライン引数のバリデーション
 		cerr << "Arguments are not enough!!\n(least 3 args)" << endl;
@@ -45,62 +67,60 @@ int main(int argc, char* argv[]) {
 	is_server = (argv[1][0] == 'S' || argv[1][0] == 's');
 	if(is_server) { player_num = atoi(argv[2]); }
 	else { ip_address = argv[2]; }								// クライアントならサーバのIPアドレスを取得
+<<<<<<< HEAD
 	for(i = 3; i < argc; i++) wii_list.push_back( WiiInputManager(argv[i]) ); 		// Wiiリモコンの準備
 
+=======
+>>>>>>> e18c893ad5beae4c22c833a5991cb898bf34e6fb
 
 	cout << "start game as a " << (is_server ? "server" : "client") << "!" << endl;
 
 	// --- 各オブジェクトの初期化 --- //
 	for(i = 0; i < 2; i++) equipments.push_back(Equipment(i));
+<<<<<<< HEAD
 	for(i = 0; i < player_num; i++) c_rumbas.push_back( CustomizedRumba( i*200 , i*200) );
+=======
+	for(i = 0; i < player_num; i++) c_rumbas.push_back( CustomizedRumba( (i+1)*400 , (i+1)*400) );
+>>>>>>> e18c893ad5beae4c22c833a5991cb898bf34e6fb
 
-	StartWindow s_window = StartWindow();
+	StartWindow* s_window = new StartWindow();
 	
 	Communicator* communicator;
-	if(is_server)  communicator = new ServerCommunicator( c_rumbas, equipments, rumba, player_num-1 );
+	if(is_server)  communicator = new ServerCommunicator( c_rumbas, equipments, rumba, 2 );
 	else communicator = new ClientCommunicator( c_rumbas, equipments, rumba, ip_address );
 
 	// --- サーバ，クライアントでハンドシェイク --- //
 	while(true) {
-		s_window.updateWindow();
-		if(SDL_PollEvent(&event)) {
-			if(event.type == SDL_QUIT) {
-				SDL_Quit();
-				return EXIT_SUCCESS;
-			}
-		}
-		// ハンドシェイク終了でbreak
-		if( communicator->handshake() ) break;
+		s_window->updateWindow();
+		quitMightClickedQuit(&event, s_window);
+		if( communicator->handshake() ) break;	// ハンドシェイク終了でbreak
 	}
 	if(is_server) communicator->sendData("{\"cmd\":\"S\"}");
 
 	client_id = communicator->getClientID();
 
+	for(i = 3; i < argc; i++) wii_list.push_back( WiiInputManager(argv[i]) ); 		// Wiiリモコンの準備
+
+	delete s_window;
+
 	// --- ゲーム開始 --- //
-	GameWindow window = GameWindow(client_id, player_num, 2);
+	GameWindow* window = new GameWindow(client_id, player_num, 2);
 
 	// フィールド状況のデータ受信の開始
 	communicator->startReceiving();
 
 	while(!is_finished) {
 
-		if(SDL_PollEvent(&event)) {
-			switch(event.type) {
-				case SDL_QUIT:				// バツボタンをクリック
-					is_finished = true;
-					break;
-			}
-		}
+		quitMightClickedQuit(&event, window);
+
+		for(i = client_id; i < wii_list.size(); i++) c_rumbas[i].setCenterPos( wii_list[i].getPos() );
 
 		for(i = (is_server ? 0 : client_wii_num); i < wii_list.size(); i++) c_rumbas[i].setCenterPos( wii_list[i].getPos() );
 
 		if(is_server) {
 			// 次のフレームの各ルンバの挙動，設備のライフの減算を行う
-			rumba.calcSpeedVector(window.getFieldRect(), &equipments, c_rumbas);
+			rumba.calcSpeedVector(window->getFieldRect(), &equipments, c_rumbas);
 			rumba.straight();
-		}
-
-		if(is_server) {
 			// ゲームの状況をクライアントに送信
 			communicator->sendData( JsonObjectMapper::getMsgSendGameState( c_rumbas, rumba, equipments) );
 		} else {
@@ -119,16 +139,29 @@ int main(int argc, char* argv[]) {
 		}
 		// --- 自分以外のルンバなどのデータを反映 --- //
 
-		// ゲームの状況を画面に反映
-		window.updateObjects(rumba, c_rumbas, equipments);
-		window.updateWindow();
+		if( timer.isWaitedOneFrame() ) {
+			// ゲームの状況を画面に反映
+			window->updateObjects(rumba, c_rumbas, equipments);
+			window->updateWindow();
+		}
+
+		// どちらかのライフが0になればゲームを終了
+		for( i = 0; i < equipments.size(); i++ ) {
+			if( equipments[i].getLife() <= 0 ) {
+				is_finished = true;
+			}
+		}
 
 		// 次のフレームまで待機
-		timer.wait2NextFrame();
+		timer.wait2NextPhysicsCalc();
 	}
+	delete window;
 
-	TTF_Quit();
-	SDL_Quit();
+	ResultWindow* r_window = new ResultWindow( equipments[client_id].getLife() > 0 );
+	r_window->updateWindow();
+	while(true) {
+		quitMightClickedQuit(&event, r_window);
+	}
 
 	return EXIT_SUCCESS;
 

@@ -38,6 +38,9 @@ ServerCommunicator::ServerCommunicator(
 	recv_sock = socket(AF_INET, SOCK_DGRAM, 0);
 	send_sock = socket(AF_INET, SOCK_DGRAM, 0);
 
+	int unblock_frag = 1;												// 1 ならばノンブロッキングソケット
+	ioctl(recv_sock, FIONBIO, &unblock_frag);		// recv_sockをノンブロッキングに設定
+
 	recv_addr.sin_family = AF_INET;
 	recv_addr.sin_port = htons(SERVER_RECV_PORT);
 	recv_addr.sin_addr.s_addr = INADDR_ANY;
@@ -70,7 +73,7 @@ bool ServerCommunicator::handshake() {
 			cout << "Connected from: " << inet_ntoa(tmp_addr.sin_addr) << ':' << ntohs(tmp_addr.sin_port) << '\n' << buf << endl;
 		}
 	}
-	return (clients.size() >= client_num);
+	return (clients.size() == client_num-1);
 }
 
 void* ServerCommunicator::receiveThread(void* args) {

@@ -1,9 +1,8 @@
 #ifndef SETTING_H
 #define SETTING_H
 
-#define FRAME_TERM 40
-#define PHYSICS_CALC_TERM 16
-#define ROOMBA_SPEED 8.0
+#define TERM_ONE_FRAME_MS 100 // 16
+#define ROOMBA_SPEED 50.0
 #define PLAYER_LIFE 20
 #define ROOMBA_RADIUS 50
 
