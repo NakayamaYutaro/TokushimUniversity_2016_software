@@ -9,6 +9,7 @@
 #include <netdb.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/ioctl.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <pthread.h>
@@ -17,7 +18,7 @@
 
 using namespace std;
 
-class Pack4Thread {
+class Pack4Thread {		// 受信スレッドと必要なデータを共有するためのクラス
 	public:
 		int* p_sock;
 		vector<CustomizedRumba>* p_c_rumbas;
@@ -30,10 +31,13 @@ class Pack4Thread {
 
 class Communicator {
 	protected:
-		int send_sock, recv_sock;
-		int client_id;
+		int send_sock, recv_sock;	// 受送信socket
+		int client_id;						// クライアント番号
+
+		// --- データ受信スレッド用
 		pthread_mutex_t mutex_handler;
 		pthread_t thread_handler;
+		// --- データ受信スレッド用
 
 		vector<CustomizedRumba> c_rumbas;
 		vector<Equipment> equipments;
@@ -51,17 +55,21 @@ class Communicator {
 		virtual void sendData(string msg) {};
 		virtual void startReceiving() { cout << "super" << endl; };
 		static void* receiveThread(void* args) {};
-
-		Triple< vector<CustomizedRumba>, vector<Equipment>, RunawayRumba > readData(){
-			pthread_mutex_lock(&mutex_handler);
-			Triple<vector<CustomizedRumba>, vector<Equipment>, RunawayRumba> data = Triple<vector<CustomizedRumba>, vector<Equipment>, RunawayRumba>(c_rumbas, equipments, rumba);
-			pthread_mutex_unlock(&mutex_handler);
-			return data;
-		}
-		void stopReceiving() {
-			pthread_cancel(thread_handler);
-			pthread_join(thread_handler, NULL);
-		}
+		Triple< vector<CustomizedRumba>, vector<Equipment>, RunawayRumba > readData();
+		void stopReceiving();
 };
+
+Triple< vector<CustomizedRumba>, vector<Equipment>, RunawayRumba > Communicator::readData(){
+	pthread_mutex_lock(&mutex_handler);
+	Triple<vector<CustomizedRumba>, vector<Equipment>, RunawayRumba> data = Triple<vector<CustomizedRumba>, vector<Equipment>, RunawayRumba>(c_rumbas, equipments, rumba);
+	pthread_mutex_unlock(&mutex_handler);
+	return data;
+}
+
+void Communicator::stopReceiving() {
+	pthread_cancel(thread_handler);
+	pthread_join(thread_handler, NULL);
+}
+
 
 #endif

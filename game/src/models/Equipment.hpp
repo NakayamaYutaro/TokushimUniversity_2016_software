@@ -14,7 +14,7 @@ class Equipment : public Object{
 		int height;
 	public:
 		Equipment(int team_id)
-			: position( Vector<int>((team_id%2)*GAME_FIELD_WIDTH+(team_id%2)*(-EQUIPMENT_WIDTH), (team_id/2)*EQUIPMENT_HEIGHT) ),
+			: position( Vector<int>((team_id%2)*GAME_FIELD_WIDTH+(team_id%2)*(-EQUIPMENT_WIDTH), GAME_FIELD_HEIGHT/2 - EQUIPMENT_HEIGHT/2) ),
 				width(EQUIPMENT_WIDTH),
 				height(EQUIPMENT_HEIGHT)
 				{ resetLife(); }
