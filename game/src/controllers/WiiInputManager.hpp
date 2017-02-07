@@ -5,6 +5,7 @@ extern "C"{
 	#include <libcwiimote/wiimote.h>
 	#include <libcwiimote/wiimote_api.h>
 	#include <libcwiimote/wiimote_link.h>
+	#include <libcwiimote/wiimote_util.h>
 }
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,15 +25,19 @@ class WiiInputManager {
 
 	public :
 		Vector<int> getPos();
-		WiiInputManager(char* wii_addr);
+		WiiInputManager(char* wii_addr, bool is_server);
 		void updatePos();
 };
 
-WiiInputManager::WiiInputManager(char* wii_addr) {
+WiiInputManager::WiiInputManager(char* wii_addr, bool is_server) {
 	wiimote = WIIMOTE_INIT;
-	if(wiimote_connect(&wiimote, wii_addr) < 0) exit(1);
+	if(wiimote_connect(&wiimote, wii_addr) < 0) {
+		cerr << "Wii remote cannot connect" << endl;
+		exit(1);
+	}
 	wiimote.mode.acc = 1; //change mode to recieve data from sensor(1).  
 	wiimote.mode.ir = 1;	//change mode to recieve data from sensor(2).
+	wiimote.led.bits = is_server ? 1 : 2;
 }
 
 void WiiInputManager::map2Field(int x1, int y1) {
@@ -48,12 +53,10 @@ Vector<int> WiiInputManager::getPos(){
 }
 
 void WiiInputManager::updatePos() {
-
 	if(wiimote_is_open(&wiimote)) {
 		if(wiimote_update(&wiimote) < 0) wiimote_disconnect(&wiimote);
 		map2Field( wiimote.ir1.x, wiimote.ir1.y );
 	}
-
 }
 
 #endif

@@ -67,11 +67,13 @@ int main(int argc, char* argv[]) {
 	for(i = 0; i < 2; i++) equipments.push_back(Equipment(i));
 	for(i = 0; i < player_num; i++) c_rumbas.push_back( CustomizedRumba( (i+1)*400 , (i+1)*400) );
 
-	StartWindow* s_window = new StartWindow();
-	
 	Communicator* communicator;
 	if(is_server)  communicator = new ServerCommunicator( c_rumbas, equipments, rumba, 2 );
 	else communicator = new ClientCommunicator( c_rumbas, equipments, rumba, ip_address );
+
+	StartWindow* s_window = new StartWindow();
+	s_window->updateWindow();
+	for(i = 3; i < argc; i++) wii_list.push_back( WiiInputManager(argv[i], is_server) );	 // Wiiリモコンの準備
 
 	// --- サーバ，クライアントでハンドシェイク --- //
 	while(true) {
@@ -83,7 +85,6 @@ int main(int argc, char* argv[]) {
 
 	client_id = communicator->getClientID();
 
-	for(i = 3; i < argc; i++) wii_list.push_back( WiiInputManager(argv[i]) ); 		// Wiiリモコンの準備
 
 	delete s_window;
 
@@ -97,7 +98,7 @@ int main(int argc, char* argv[]) {
 
 		quitMightClickedQuit(&event, window);
 
-		for(i = client_id; i < wii_list.size(); i++) c_rumbas[i].setCenterPos( wii_list[i].getPos() );
+		for(i = client_id; i < c_rumbas.size(); i++) c_rumbas[i].setCenterPos( wii_list[i-client_id].getPos() );
 
 		if(is_server) {
 			// 次のフレームの各ルンバの挙動，設備のライフの減算を行う
