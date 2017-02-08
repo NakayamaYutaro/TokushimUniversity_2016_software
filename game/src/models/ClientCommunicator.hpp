@@ -99,6 +99,7 @@ void* ClientCommunicator::receiveThread(void* args) {
 
 			if( params["cmd"].get<string>() == CMD_DISTRIBUTE_DATA ) {
 				pthread_mutex_lock(arg->p_mutex_handler);
+
 				// --- this code same as JsonObjectMapper::setGameState --- //
 				picojson::array roomba_data = params["roombas"].get<picojson::array>();
 				unsigned int i;
@@ -110,6 +111,7 @@ void* ClientCommunicator::receiveThread(void* args) {
 				picojson::array life_data = params["life"].get<picojson::array>();
 				for(i = 0; i < life_data.size(); i++) arg->p_equipments->at(i).setLife( (int)(life_data[i].get<double>()) );
 				// --- this code same as JsonObjectMapper::setGameState --- //
+				
 				pthread_mutex_unlock(arg->p_mutex_handler);
 			}
 

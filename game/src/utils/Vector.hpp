@@ -13,6 +13,7 @@ class Vector{
 		Vector(T x_val = 0, T y_val = 0) : x(x_val), y(y_val) {}
 		T getX() { return x; }
 		T getY() { return y; }
+		void setVals(T val_x, T val_y) { x = val_x; y = val_y; }
 		operator const Vector<int>() const { return Vector<int>( (int)x, (int)y ); }
 		operator const Vector<float>() const { return Vector<float>( (float)x, (float)y ); }
 		operator const Vector<double>() const { return Vector<double>( (double)x, (double)y ); }

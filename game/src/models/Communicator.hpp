@@ -37,7 +37,6 @@ class Communicator {
 		// --- データ受信スレッド用
 		pthread_mutex_t mutex_handler;
 		pthread_t thread_handler;
-		// --- データ受信スレッド用
 
 		vector<CustomizedRumba> c_rumbas;
 		vector<Equipment> equipments;
@@ -60,10 +59,12 @@ class Communicator {
 };
 
 Triple< vector<CustomizedRumba>, vector<Equipment>, RunawayRumba > Communicator::readData(){
+
 	pthread_mutex_lock(&mutex_handler);
 	Triple<vector<CustomizedRumba>, vector<Equipment>, RunawayRumba> data = Triple<vector<CustomizedRumba>, vector<Equipment>, RunawayRumba>(c_rumbas, equipments, rumba);
 	pthread_mutex_unlock(&mutex_handler);
 	return data;
+
 }
 
 void Communicator::stopReceiving() {

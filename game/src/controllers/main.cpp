@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
 	bool is_finished = false;
 	bool is_server = false;
 	string ip_address = "127.0.0.1";
-	vector<WiiInputManager> wii_list;
+	vector<WiiInputManager*> wii_list;
 	Timer timer = Timer();
 	SDL_Event event;
 
@@ -73,13 +73,16 @@ int main(int argc, char* argv[]) {
 
 	StartWindow* s_window = new StartWindow();
 	s_window->updateWindow();
-	for(i = 3; i < argc; i++) wii_list.push_back( WiiInputManager(argv[i], is_server) );	 // Wiiリモコンの準備
+	for(i = 3; i < argc; i++) {
+		cout << i << endl;
+		wii_list.push_back( new WiiInputManager(argv[i], is_server) );	 // Wiiリモコンの準備
+	}
 
 	// --- サーバ，クライアントでハンドシェイク --- //
 	while(true) {
 		s_window->updateWindow();
 		quitMightClickedQuit(&event, s_window);
-		if( communicator->handshake() ) break;	// ハンドシェイク終了でbreak
+		if( communicator->handshake() ) break;													// ハンドシェイク終了でbreak
 	}
 	if(is_server) communicator->sendData("{\"cmd\":\"S\"}");
 
@@ -98,7 +101,7 @@ int main(int argc, char* argv[]) {
 
 		quitMightClickedQuit(&event, window);
 
-		for(i = client_id; i < c_rumbas.size(); i++) c_rumbas[i].setCenterPos( wii_list[i-client_id].getPos() );
+		for(i = 0; i < wii_list.size(); i++) c_rumbas[i+client_id].setCenterPos( wii_list[i]->getPos() );
 
 		if(is_server) {
 			// 次のフレームの各ルンバの挙動，設備のライフの減算を行う
