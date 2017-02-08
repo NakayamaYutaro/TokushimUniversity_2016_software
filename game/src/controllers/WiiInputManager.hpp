@@ -12,12 +12,6 @@ extern "C"{
 #include "../utils/Vector.hpp"
 #include "../Setting.hpp"
 
-
-#define POINT_X_MIN 0
-#define POINT_X_MAX 1791
-#define POINT_Y_MIN 0
-#define POINT_Y_MAX 1272
-
 class WiiInputManager {
 	private: 
 		Vector<int> position;
@@ -50,17 +44,18 @@ Vector<int> WiiInputManager::getPos(){
 }
 
 void WiiInputManager::updatePos() {
-if(wiimote_is_open(&wiimote)) {
-	if(wiimote_update(&wiimote) < 0) {
-		wiimote_disconnect(&wiimote);
-		cerr << "disconnected" << endl;
-		exit(1);
-	}
-	// wiiリモコンからの入力領域と画面上の座標領域が合わないのでマッピングを行う
-	position.setVals(
-		GAME_WINDOW_WIDTH - wiimote.ir1.x * GAME_WINDOW_WIDTH / (POINT_X_MAX - POINT_X_MIN) + (is_server ? 0 : GAME_WINDOW_WIDTH),
-		wiimote.ir1.y * GAME_WINDOW_HEIGHT / (POINT_Y_MAX - POINT_Y_MIN)
-	);
+	if(wiimote_is_open(&wiimote)) {
+		if(wiimote_update(&wiimote) < 0) {
+			wiimote_disconnect(&wiimote);
+			cerr << "disconnected" << endl;
+			exit(1);
+		}
+		// wiiリモコンからの入力領域と画面上の座標領域が合わないのでマッピングを行う
+		position.setVals(
+			GAME_WINDOW_WIDTH - wiimote.ir1.x * GAME_WINDOW_WIDTH / (POINT_X_MAX - POINT_X_MIN) + (is_server ? 0 : GAME_WINDOW_WIDTH),
+			wiimote.ir1.y * GAME_WINDOW_HEIGHT / (POINT_Y_MAX - POINT_Y_MIN)
+		);
+		wiimote.rumble = (wiimote.ir1.x < POINT_X_MAX && wiimote.ir1.y < POINT_Y_MAX) ? 0 : 1;
 	}
 }
 

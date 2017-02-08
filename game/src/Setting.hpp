@@ -29,6 +29,14 @@
 #define SERVER_RECV_PORT 8080
 // ------ for network ------ //
 
+// ------ for wii remote ------ //
+#define POINT_X_MIN 0
+#define POINT_X_MAX 1791
+#define POINT_Y_MIN 0
+#define POINT_Y_MAX 1272
+// ------ for wii remote ------ //
+
+
 // ------ start window ------ //
 #define TIME_SEC_SHOW_TITLE 5
 #define TITLE_IMG_PATH "../assets/title.png" 
@@ -50,5 +58,6 @@
 #define LIFE_PANEL_WIDTH 200
 #define LIFE_PANEL_HEIGHT 141
 // ------ game window ------ //
+
 
 #endif
