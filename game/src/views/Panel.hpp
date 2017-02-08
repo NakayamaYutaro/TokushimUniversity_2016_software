@@ -9,7 +9,7 @@
 class Panel{
 	protected:
 		SDL_Surface* img;
-		SDL_Rect img_rect;
+		SDL_Rect img_rect, dest_rect;
 		Vector<int> position;
 	public:
 		Panel(Vector<int> initial_pos, const char* img_path) : position(initial_pos) {
@@ -25,7 +25,6 @@ class Panel{
 		}
 		// if client_id == 0 then draw left side, otherwise draw right side
 		void drawPanel(SDL_Surface* window, int client_id) {
-			SDL_Rect dest_rect;
 			dest_rect.x = position.getX() - (GAME_WINDOW_WIDTH*client_id);
 			dest_rect.y = position.getY();
 			dest_rect.w = img->w;
@@ -33,6 +32,7 @@ class Panel{
 			SDL_BlitSurface(img, &img_rect, window, &dest_rect);
 		}
 		void setPosition(Vector<int> new_pos) { position = new_pos; }
+		SDL_Rect getImgRect() { return img_rect; }
 };
 
 #endif

@@ -15,6 +15,7 @@ class StartWindow : public Window {
 	public:
 		StartWindow() : Window(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, (char*)TITLE_IMG_PATH) { is_changed_pic = false; init_time = time(NULL); }
 		void updateWindow();
+		void drawBackground();
 };
 
 void StartWindow::updateWindow() {
@@ -26,6 +27,14 @@ void StartWindow::updateWindow() {
 		}
 	}
 	SDL_Flip(window);
+
+}
+
+void StartWindow::drawBackground() {
+	static bool is_initialized = false;
+	if(is_initialized) return;
+	Window::drawBackground();
+	is_initialized = true;
 }
 
 #endif

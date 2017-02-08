@@ -31,6 +31,7 @@ class GameWindow : public Window {
 		~GameWindow() { TTF_CloseFont(font); }
 		void updateWindow();
 		void updateObjects(RunawayRumba roomba, vector<CustomizedRumba> c_rumba_list, vector<Equipment> equip_list);
+		void drawBackground();
 		SDL_Rect getFieldRect() { return field_rect; }
 };
 
@@ -89,6 +90,21 @@ void GameWindow::drawObjects() {
 	for(i = 0; i < equip_panel_list.size(); i++) equip_panel_list[i].drawPanel(window, client_id);
 	for(i = 0; i < rumba_panel_list.size(); i++) rumba_panel_list[i].drawPanel(window, client_id);
 	for(i = 0; i < life_panel_list.size(); i++) life_panel_list[i].drawPanel(window, font, client_id);
+}
+
+void GameWindow::drawBackground() {
+	static bool is_initialized = false;
+	SDL_Rect src_rect, dest_rect;
+	if(!is_initialized) {
+		Window::drawBackground();
+		is_initialized = true;
+		return;
+	}
+	// --- それぞれのルンバの描画範囲だけ背景を上塗り ---
+	for(unsigned int i = 0; i < rumba_panel_list.size(); i++) {
+		dest_rect = src_rect = rumba_panel_list[i].getPrevRect();
+		SDL_BlitSurface(background, &src_rect, window, &dest_rect);
+	}
 }
 
 #endif
