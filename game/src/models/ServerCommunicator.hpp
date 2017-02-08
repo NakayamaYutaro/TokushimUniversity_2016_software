@@ -72,6 +72,7 @@ bool ServerCommunicator::handshake() {
 
 void* ServerCommunicator::receiveThread(void* args) {
 	Pack4Thread* arg = static_cast<Pack4Thread*>(args);
+	unsigned int i;
 	while(true) {
 		char buf[BUFFER_SIZE];
 		memset(buf, 0, sizeof(buf));
@@ -81,13 +82,16 @@ void* ServerCommunicator::receiveThread(void* args) {
 			// クライアントから操作する改造ルンバの位置情報が送られてきたときに更新
 			if( params["cmd"].get<string>() == CMD_DISTRIBUTE_DATA ) {
 				int c_id = static_cast<int>( params["ID"].get<double>() );
+				picojson::array pos_list = params["roombas"].get<picojson::array>();
 				pthread_mutex_lock(arg->p_mutex_handler);
-				arg->p_c_rumbas->at(c_id).setCenterPos(
-					Vector<float>(
-						static_cast<float>( params["x"].get<double>() ),
-						static_cast<float>( params["y"].get<double>() )
-					)
-				);
+				for(i = 0; i < pos_list.size(); i++) {
+					arg->p_c_rumbas->at(c_id + i).setCenterPos(
+						Vector<float>(
+							static_cast<float>( pos_list[i].get<picojson::object>()["x"].get<double>() ),
+							static_cast<float>( pos_list[i].get<picojson::object>()["y"].get<double>() )
+						)
+					);
+				}
 				pthread_mutex_unlock(arg->p_mutex_handler);
 			}
 		}
@@ -99,6 +103,7 @@ void ServerCommunicator::sendData(string msg) {
 	socklen_t addrlen;
 	addrlen = sizeof(client);
 	const void* tmp_msg = msg.c_str();
+	cout << "[log: msg send] " << msg << endl;
 	sendto(send_sock, tmp_msg, msg.size(), 0, (struct sockaddr*)&(client), addrlen);
 }
 

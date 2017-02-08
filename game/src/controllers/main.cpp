@@ -111,7 +111,7 @@ int main(int argc, char* argv[]) {
 			communicator->sendData( JsonObjectMapper::getMsgSendGameState( c_rumbas, rumba, equipments) );
 		} else {
 			// 自分の操作する改造ルンバの位置情報をサーバに送信
-			communicator->sendData( JsonObjectMapper::getMyRoombaMsg(client_id, c_rumbas[client_id]) );
+			communicator->sendData( JsonObjectMapper::getMyRoombaMsg(client_id, &c_rumbas) );
 		}
 
 		// --- 自分以外のルンバなどのデータを反映 --- //

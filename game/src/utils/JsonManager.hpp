@@ -27,7 +27,7 @@ namespace JsonObjectMapper {
 	// set from json msg : send each rumba and life of equipment
 	void setGameState(picojson::object game_state, vector<CustomizedRumba>* c_roombas, RunawayRumba* r_roomba, vector<Equipment>* equipments);
 	// ---- methods for server --- //
-	string getMyRoombaMsg(int client_id, CustomizedRumba roomba);
+	string getMyRoombaMsg(int client_id, vector<CustomizedRumba>* roombas);
 }
 
 string JsonObjectMapper::getMsgSendGameState(vector<CustomizedRumba> roombas, RunawayRumba roomba, vector<Equipment> equipments) {
@@ -81,11 +81,17 @@ void JsonObjectMapper::setGameState(picojson::object game_state, vector<Customiz
 	for(i = 0; i < life_data.size(); i++) equipments->at(i).setLife( (int)(life_data[i].get<double>()) );
 }
 
-string JsonObjectMapper::getMyRoombaMsg(int client_id, CustomizedRumba roomba) {
+string JsonObjectMapper::getMyRoombaMsg(int client_id, vector<CustomizedRumba>* roombas) {
 	stringstream ss;
-	Vector<float> pos = roomba.getCenterPos();
+	Vector<float> pos;
 	ss << "{\"cmd\":\"" << CMD_DISTRIBUTE_DATA <<"\", \"ID\":" << client_id;
-	ss << ", \"x\":" << pos.getX() << ",\"y\":" << pos.getY() << "}";
+	ss << ", \"roombas\":[ ";
+	for(unsigned int i = client_id; i < roombas->size(); i++) {
+		pos = roombas->at(i).getCenterPos();
+		ss << "{\"x\":" << pos.getX() << ",\"y\":" << pos.getY() << "}";
+		if(i < roombas->size()-1) ss << ", ";
+	}
+	ss << " ] }";
 	return ss.str();
 }
 

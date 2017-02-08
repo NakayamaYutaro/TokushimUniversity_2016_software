@@ -85,11 +85,13 @@ bool ClientCommunicator::handshake() {
 void ClientCommunicator::sendData(string msg) {
 	socklen_t addrlen;
 	addrlen = sizeof(send_addr);
+	cout << "[log: msg send] " << msg << endl;
 	sendto(send_sock, msg.c_str(), msg.size(), 0, (struct sockaddr*)&(send_addr), addrlen);
 }
 void* ClientCommunicator::receiveThread(void* args) {
 	Pack4Thread* arg = static_cast<Pack4Thread*>(args);
 	while(true) {
+
 		char buf[BUFFER_SIZE];
 		memset(buf, 0, sizeof(buf));
 
@@ -114,11 +116,10 @@ void* ClientCommunicator::receiveThread(void* args) {
 				
 				pthread_mutex_unlock(arg->p_mutex_handler);
 			}
-
 		}
-
 	}
 }
+
 void ClientCommunicator::startReceiving() {
 	pthread_mutex_init(&mutex_handler, NULL);
 	pthread_create(&thread_handler, NULL, &ClientCommunicator::receiveThread,
