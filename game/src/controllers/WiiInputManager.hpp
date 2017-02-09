@@ -12,31 +12,39 @@ extern "C"{
 #include "../utils/Vector.hpp"
 #include "../Setting.hpp"
 
+using namespace std;
 class WiiInputManager {
 	private: 
 		Vector<int> position;
 		wiimote_t wiimote;
 		bool is_server;
+		string wii_addr;
 
 	public :
 		Vector<int> getPos();
 		WiiInputManager(char* wii_addr, bool is_server);
 		~WiiInputManager() { wiimote_disconnect(&wiimote); }
 		void updatePos();
+		bool connect();
 };
 
-WiiInputManager::WiiInputManager(char* wii_addr, bool server_flag) : is_server(server_flag){
+WiiInputManager::WiiInputManager(char* p_wii_addr, bool server_flag) : is_server(server_flag){
+	wii_addr = p_wii_addr;
 	wiimote = WIIMOTE_INIT;
-	if(wiimote_connect(&wiimote, wii_addr) < 0) {
+}
+
+bool WiiInputManager::connect() {
+	cout << "waiting wiiremote..." << wii_addr << endl;
+	if(wiimote_connect(&wiimote, wii_addr.c_str()) < 0) {
 		cerr << "Wii remote cannot connect" << endl;
-		exit(1);
+		return false;
 	}
 	cout << "wii remote connected : " << wii_addr << endl;
 	wiimote.mode.acc = 1; //change mode to recieve data from sensor(1).  
 	wiimote.mode.ir = 1;	//change mode to recieve data from sensor(2).
 	wiimote.led.bits = is_server ? 1 : 2;
+	return true;
 }
-
 
 Vector<int> WiiInputManager::getPos(){
 	updatePos();

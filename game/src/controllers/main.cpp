@@ -73,9 +73,10 @@ int main(int argc, char* argv[]) {
 
 	StartWindow* s_window = new StartWindow();
 	s_window->updateWindow();
-	for(i = 3; i < argc; i++) {
-		cout << i << endl;
-		wii_list.push_back( new WiiInputManager(argv[i], is_server) );	 // Wiiリモコンの準備
+	 // --- Wiiリモコンの準備 ---
+	for(i = 3; i < argc; i++) wii_list.push_back( new WiiInputManager(argv[i], is_server) );
+	for(i = 0; i < wii_list.size(); i += wii_list[i]->connect() ? 1 : 0) {
+		quitMightClickedQuit(&event, s_window);
 	}
 
 	// --- サーバ，クライアントでハンドシェイク --- //
