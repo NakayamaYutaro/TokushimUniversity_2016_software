@@ -55,7 +55,6 @@ void WiiInputManager::updatePos() {
 			GAME_WINDOW_WIDTH - wiimote.ir1.x * GAME_WINDOW_WIDTH / (POINT_X_MAX - POINT_X_MIN) + (is_server ? 0 : GAME_WINDOW_WIDTH),
 			wiimote.ir1.y * GAME_WINDOW_HEIGHT / (POINT_Y_MAX - POINT_Y_MIN)
 		);
-		wiimote.rumble = (wiimote.ir1.x < POINT_X_MAX && wiimote.ir1.y < POINT_Y_MAX) ? 0 : 1;
 	}
 }
 
