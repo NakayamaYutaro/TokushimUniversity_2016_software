@@ -21,7 +21,7 @@ class LifePanel : public Panel {
 			Panel(
 				Vector<int>( (team_id%2)*GAME_FIELD_WIDTH+(team_id%2)*(-LIFE_PANEL_WIDTH), (team_id/2)*LIFE_PANEL_HEIGHT ) ,
 				LIFE_PANEL_IMG_PATH
-			), life(PLAYER_LIFE) {
+			), life(DEFAULT_LIFE) {
 				white.r = 255; white.g = 255; white.b = 255; 
 				text_img = NULL;
 			}

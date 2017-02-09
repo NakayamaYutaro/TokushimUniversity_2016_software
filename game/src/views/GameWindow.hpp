@@ -17,7 +17,7 @@ using namespace std;
 
 class GameWindow : public Window {
 	private:
-		vector<RumbaPanel> rumba_panel_list;
+		vector<RumbaPanel> rumba_panel_list;		// 0~:改造ルンバ, 最後の1つ:暴走ルンバ
 		vector<EquipmentPanel> equip_panel_list;
 		vector<LifePanel> life_panel_list;
 		SDL_Rect field_rect;
@@ -32,6 +32,7 @@ class GameWindow : public Window {
 		void updateWindow();
 		void updateObjects(RunawayRumba roomba, vector<CustomizedRumba> c_rumba_list, vector<Equipment> equip_list);
 		SDL_Rect getFieldRect() { return field_rect; }
+		void explodedEquipRoomba(int i);
 };
 
 void GameWindow::updateWindow() {
@@ -89,6 +90,13 @@ void GameWindow::drawObjects() {
 	for(i = 0; i < equip_panel_list.size(); i++) equip_panel_list[i].drawPanel(window, client_id);
 	for(i = 0; i < rumba_panel_list.size(); i++) rumba_panel_list[i].drawPanel(window, client_id);
 	for(i = 0; i < life_panel_list.size(); i++) life_panel_list[i].drawPanel(window, font, client_id);
+}
+
+void GameWindow::explodedEquipRoomba(int i) {
+	equip_panel_list[i].changeImg(
+		(i == 0) ? EXPLODED_EQUIP_LEFT_SIDE_IMG_PATH : EXPLODED_EQUIP_RIGHT_SIDE_IMG_PATH 
+	);
+	rumba_panel_list[rumba_panel_list.size()-1].changeImg(EXPLODED_ROOMBA_IMG_PATH);
 }
 
 #endif

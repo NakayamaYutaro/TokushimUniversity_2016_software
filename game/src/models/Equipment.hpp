@@ -7,7 +7,6 @@
 
 class Equipment : public Object{
 	private:
-		static const int DEFAULT_LIFE = 20;
 		int life;
 		Vector<int> position;
 		int width;

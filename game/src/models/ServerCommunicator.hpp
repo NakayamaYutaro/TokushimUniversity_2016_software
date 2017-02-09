@@ -103,7 +103,7 @@ void ServerCommunicator::sendData(string msg) {
 	socklen_t addrlen;
 	addrlen = sizeof(client);
 	const void* tmp_msg = msg.c_str();
-	cout << "[log: msg send] " << msg << endl;
+	//cout << "[log: msg send] " << msg << endl;
 	sendto(send_sock, tmp_msg, msg.size(), 0, (struct sockaddr*)&(client), addrlen);
 }
 

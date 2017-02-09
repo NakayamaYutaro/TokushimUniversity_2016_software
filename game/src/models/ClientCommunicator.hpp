@@ -85,7 +85,7 @@ bool ClientCommunicator::handshake() {
 void ClientCommunicator::sendData(string msg) {
 	socklen_t addrlen;
 	addrlen = sizeof(send_addr);
-	cout << "[log: msg send] " << msg << endl;
+	//cout << "[log: msg send] " << msg << endl;
 	sendto(send_sock, msg.c_str(), msg.size(), 0, (struct sockaddr*)&(send_addr), addrlen);
 }
 void* ClientCommunicator::receiveThread(void* args) {

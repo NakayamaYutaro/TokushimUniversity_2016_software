@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
 		for(i = 0; i < wii_list.size(); i++) c_rumbas[i+client_id].setCenterPos( wii_list[i]->getPos() );
 
 		if(is_server) {
-			// 次のフレームの各ルンバの挙動，設備のライフの減算を行う
+			// 次のフレームの暴走ルンバの挙動，設備のライフの減算を行う
 			rumba.calcSpeedVector(window->getFieldRect(), &equipments, c_rumbas);
 			rumba.straight();
 			// ゲームの状況をクライアントに送信
@@ -134,6 +134,9 @@ int main(int argc, char* argv[]) {
 		// どちらかのライフが0になればゲームを終了
 		for( i = 0; i < equipments.size(); i++ ) {
 			if( equipments[i].getLife() <= 0 ) {
+				window->explodedEquipRoomba(i);
+				window->updateWindow();
+				SDL_Delay(2000);
 				is_finished = true;
 			}
 		}

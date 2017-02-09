@@ -20,9 +20,11 @@ class RunawayRumba : public Rumba {
 		Vector<float> getReflectedVector(Equipment* equipment);
 		Vector<float> getReflectedVector(CustomizedRumba rumba);
 		Vector<float> getReflectedVector(SDL_Rect field);
+		unsigned int prev_ticks;
 	public:
 		RunawayRumba(int x, int y) : Rumba(x, y) {
 			speed_vec = Vector<float>(ROOMBA_SPEED*0.7, ROOMBA_SPEED*0.3);
+			prev_ticks = 0;
 		}
 		void straight();
 		void calcSpeedVector(SDL_Rect field, vector<Equipment>* equip_list, vector<CustomizedRumba> rumba_list);
@@ -85,7 +87,13 @@ Vector<float> RunawayRumba::getReflectedVector(SDL_Rect field) {
 	return Vector<float>(0.0, 0.0);
 }
 
-void RunawayRumba::straight() { center_pos = center_pos + speed_vec; }
+void RunawayRumba::straight() {
+	// --- 暴走ルンバの移動速度がコンピュータの処理速度依存にならないように ---
+	if(prev_ticks == 0) prev_ticks = SDL_GetTicks();
+	unsigned int now_ticks = SDL_GetTicks();
+	center_pos += speed_vec * ( (now_ticks - prev_ticks) / 1000.0 );
+	prev_ticks = now_ticks;
+}
 
 void RunawayRumba::calcSpeedVector(SDL_Rect field, vector<Equipment>* equip_list, vector<CustomizedRumba> rumba_list) {
 	Vector<float> tmp_vec = Vector<float>(0.0, 0.0);

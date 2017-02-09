@@ -3,8 +3,8 @@
 
 #define FRAME_TERM 40
 #define PHYSICS_CALC_TERM 16
-#define ROOMBA_SPEED 8.0
-#define PLAYER_LIFE 20
+#define ROOMBA_SPEED 1500.0			// [px/sec]
+#define DEFAULT_LIFE 20
 #define ROOMBA_RADIUS 50
 
 #define FONT_PATH "../assets/SNsanafonObiV250.ttf"
@@ -46,9 +46,12 @@
 // ------ game window ------ //
 #define GAME_WINDOW_BACKGROUND_PATH "../assets/ground.png"
 #define RUNAWAY_ROOMBA_IMG_PATH "../assets/roomba3.png"
+#define EXPLODED_ROOMBA_IMG_PATH "../assets/exploded_roomba.png"
 #define CUSTOMIZED_ROOMBA_IMG_PATH "../assets/roomba2.png"
 #define EQUIPMENT_RIGHT_SIDE_IMG_PATH "../assets/equipment1.png"
+#define EXPLODED_EQUIP_RIGHT_SIDE_IMG_PATH "../assets/exploded_equipment1.png"
 #define EQUIPMENT_LEFT_SIDE_IMG_PATH "../assets/equipment2.png"
+#define EXPLODED_EQUIP_LEFT_SIDE_IMG_PATH "../assets/exploded_equipment2.png"
 #define LIFE_PANEL_IMG_PATH "../assets/lifepanel.png"
 #define GAME_WIN_IMG_PATH "../assets/win2.png"
 #define GAME_LOSE_IMG_PATH "../assets/lose2.png"

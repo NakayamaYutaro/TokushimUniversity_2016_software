@@ -33,6 +33,11 @@ class Panel{
 			SDL_BlitSurface(img, &img_rect, window, &dest_rect);
 		}
 		void setPosition(Vector<int> new_pos) { position = new_pos; }
+		void changeImg(const char* img_path) {
+			img = IMG_Load(img_path);
+			img_rect.w = img->w;
+			img_rect.h = img->h;
+		}
 };
 
 #endif
