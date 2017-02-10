@@ -10,7 +10,7 @@ using namespace std;
 class ServerCommunicator : public Communicator {
 	private:
 		struct sockaddr_in client;	// ゲームをプレイしているクライアントリスト
-		unsigned int client_num;
+		unsigned int client_crumba_num;
 		sockaddr_in recv_addr;
 		char buf[BUFFER_SIZE];
 	public:
@@ -18,7 +18,7 @@ class ServerCommunicator : public Communicator {
 				vector<CustomizedRumba> p_c_rumbas,
 				vector<Equipment> p_equipments,
 				RunawayRumba p_rumba,
-				unsigned int arg_client_num
+				unsigned int arg_client_crumba_num
 		);
 		Triple< vector<CustomizedRumba>, vector<Equipment>, RunawayRumba > readData();
 		bool handshake();
@@ -31,8 +31,8 @@ ServerCommunicator::ServerCommunicator(
 		vector<CustomizedRumba> p_c_rumbas,
 		vector<Equipment> p_equipments,
 		RunawayRumba p_rumba,
-		unsigned int arg_client_num
-	) : Communicator(p_c_rumbas, p_equipments, p_rumba), client_num(arg_client_num) {
+		unsigned int arg_client_crumba_num
+	) : Communicator(p_c_rumbas, p_equipments, p_rumba), client_crumba_num(arg_client_crumba_num) {
 
 	recv_sock = socket(AF_INET, SOCK_DGRAM, 0);
 	send_sock = socket(AF_INET, SOCK_DGRAM, 0);
@@ -60,9 +60,9 @@ bool ServerCommunicator::handshake() {
 		unsigned int i = 0;
 		tmp_addr.sin_port = htons(SERVER_DEST_PORT);
 		client = tmp_addr;
-		// クライアントにIDを返信
+		// ID = 改造ルンバのリスト上でクライアントの操作するルンバたちの先頭インデックス
 		ostringstream stream;
-		stream <<  "{\"cmd\":\"" << CMD_HANDSHAKE << "\",  \"ID\":" << i+1 << " }";
+		stream <<  "{\"cmd\":\"" << CMD_HANDSHAKE << "\",  \"ID\":" << client_crumba_num << " }";
 		sendData(stream.str());
 		cout << "Connected from: " << inet_ntoa(tmp_addr.sin_addr) << ':' << ntohs(tmp_addr.sin_port) << '\n' << buf << endl;
 		return true;
@@ -78,7 +78,8 @@ void* ServerCommunicator::receiveThread(void* args) {
 		memset(buf, 0, sizeof(buf));
 		if( recv( *(arg->p_sock), buf, sizeof(buf), 0) > 0 ) {
 			string tmp_msg = buf;
-			picojson::object params = JsonObjectMapper::unmarshal(tmp_msg);
+			picojson::object params = JsonManager::unmarshal(tmp_msg);
+			cout << "[log: msg recv]" << buf << endl;
 			// クライアントから操作する改造ルンバの位置情報が送られてきたときに更新
 			if( params["cmd"].get<string>() == CMD_DISTRIBUTE_DATA ) {
 				int c_id = static_cast<int>( params["ID"].get<double>() );

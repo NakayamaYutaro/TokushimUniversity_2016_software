@@ -22,12 +22,12 @@ class GameWindow : public Window {
 		vector<LifePanel> life_panel_list;
 		SDL_Rect field_rect;
 		TTF_Font* font;
-		int client_id;
+		bool is_server;
 		void drawObjects();
 		void initFont();
 	public:
 		GameWindow() : Window(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, (char*)GAME_WINDOW_BACKGROUND_PATH) { initFont(); }
-		GameWindow(int client_id, int num_of_player, int team_num);
+		GameWindow(bool server_flag, int num_of_player, int team_num);
 		~GameWindow() { TTF_CloseFont(font); }
 		void updateWindow();
 		void updateObjects(RunawayRumba roomba, vector<CustomizedRumba> c_rumba_list, vector<Equipment> equip_list);
@@ -50,7 +50,7 @@ void GameWindow::initFont() {
 	}
 }
 
-GameWindow::GameWindow(int id, int num_of_player, int team_num) : client_id(id), Window(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, (char*)GAME_WINDOW_BACKGROUND_PATH) {
+GameWindow::GameWindow(bool server_flag, int num_of_player, int team_num) : is_server(server_flag), Window(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, (char*)GAME_WINDOW_BACKGROUND_PATH) {
 	initFont();
 	int i;
 	rumba_panel_list = vector<RumbaPanel>();
@@ -88,9 +88,9 @@ void GameWindow::updateObjects(RunawayRumba roomba, vector<CustomizedRumba> c_ru
 // --- private ---
 void GameWindow::drawObjects() {
 	unsigned int i;
-	for(i = 0; i < equip_panel_list.size(); i++) equip_panel_list[i].drawPanel(window, client_id);
-	for(i = 0; i < rumba_panel_list.size(); i++) rumba_panel_list[i].drawPanel(window, client_id);
-	for(i = 0; i < life_panel_list.size(); i++) life_panel_list[i].drawPanel(window, font, client_id);
+	for(i = 0; i < equip_panel_list.size(); i++) equip_panel_list[i].drawPanel(window, is_server);
+	for(i = 0; i < rumba_panel_list.size(); i++) rumba_panel_list[i].drawPanel(window, is_server);
+	for(i = 0; i < life_panel_list.size(); i++) life_panel_list[i].drawPanel(window, font, is_server);
 }
 
 void GameWindow::explodedEquipRoomba(int i) {

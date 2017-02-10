@@ -32,10 +32,11 @@ void quitMightClickedQuit(SDL_Event* event, Window* window) {
 	}
 }
 
+
 int main(int argc, char* argv[]) {
 
 	unsigned int i;
-	int client_id = 0;
+	int c_rumba_head = 0;
 	unsigned int player_num = 2;
 	int client_wii_num = 1;
 	bool is_finished = false;
@@ -59,7 +60,10 @@ int main(int argc, char* argv[]) {
 	}
 	is_server = (argv[1][0] == 'S' || argv[1][0] == 's');
 	if(is_server) { player_num = atoi(argv[2]); }
-	else { ip_address = argv[2]; }								// クライアントならサーバのIPアドレスを取得
+	else {
+		ip_address = argv[2];
+		player_num = argc-3;
+	}
 
 	cout << "start game as a " << (is_server ? "server" : "client") << "!" << endl;
 
@@ -68,7 +72,7 @@ int main(int argc, char* argv[]) {
 	for(i = 0; i < player_num; i++) c_rumbas.push_back( CustomizedRumba( (i+1)*400 , (i+1)*400) );
 
 	Communicator* communicator;
-	if(is_server)  communicator = new ServerCommunicator( c_rumbas, equipments, rumba, 2 );
+	if(is_server)  communicator = new ServerCommunicator( c_rumbas, equipments, rumba, argc-3 );
 	else communicator = new ClientCommunicator( c_rumbas, equipments, rumba, ip_address );
 
 	StartWindow* s_window = new StartWindow();
@@ -87,13 +91,16 @@ int main(int argc, char* argv[]) {
 	}
 	if(is_server) communicator->sendData("{\"cmd\":\"S\"}");
 
-	client_id = communicator->getClientID();
-
+	// --- ---
+	c_rumba_head = communicator->getClientID();
+	if(!is_server) player_num += c_rumba_head;
+	for(i = 0; i < c_rumba_head; i++) c_rumbas.push_back( CustomizedRumba( (i+1)*400 , (i+1)*400) );
+	communicator->addCRoomba(c_rumba_head);
 
 	delete s_window;
 
 	// --- ゲーム開始 --- //
-	GameWindow* window = new GameWindow(client_id, player_num, 2);
+	GameWindow* window = new GameWindow(is_server, player_num, 2);
 
 	// フィールド状況のデータ受信の開始
 	communicator->startReceiving();
@@ -102,24 +109,26 @@ int main(int argc, char* argv[]) {
 
 		quitMightClickedQuit(&event, window);
 
-		for(i = 0; i < wii_list.size(); i++) c_rumbas[i+client_id].setCenterPos( wii_list[i]->getPos() );
+		for(i = 0; i < wii_list.size(); i++) c_rumbas[i+c_rumba_head].setCenterPos( wii_list[i]->getPos() );
 
 		if(is_server) {
 			// 次のフレームの暴走ルンバの挙動，設備のライフの減算を行う
 			rumba.calcSpeedVector(window->getFieldRect(), &equipments, c_rumbas);
 			rumba.straight();
 			// ゲームの状況をクライアントに送信
-			communicator->sendData( JsonObjectMapper::getMsgSendGameState( c_rumbas, rumba, equipments) );
+			communicator->sendData( JsonManager::getMsgSendGameState( c_rumbas, rumba, equipments) );
 		} else {
 			// 自分の操作する改造ルンバの位置情報をサーバに送信
-			communicator->sendData( JsonObjectMapper::getMyRoombaMsg(client_id, &c_rumbas) );
+			communicator->sendData( JsonManager::getMyRoombaMsg(c_rumba_head, c_rumba_head+argc-3, &c_rumbas) );
 		}
 
 		// --- 自分以外のルンバなどのデータを反映 --- //
 		Triple< vector<CustomizedRumba>, vector<Equipment>, RunawayRumba > triple = communicator->readData();
-		CustomizedRumba tmp = c_rumbas[client_id];
+		vector<CustomizedRumba> tmp = c_rumbas;
 		c_rumbas = triple.getFst();
-		c_rumbas[client_id] = tmp;
+		for(i = c_rumba_head; i < (c_rumba_head + argc - 3); i++) {
+			c_rumbas[i] = tmp[i];
+		}
 		if(!is_server) {
 			equipments = triple.getSnd();
 			rumba = triple.getThrd();
@@ -147,7 +156,7 @@ int main(int argc, char* argv[]) {
 	}
 	delete window;
 
-	ResultWindow* r_window = new ResultWindow( equipments[client_id].getLife() > 0 );
+	ResultWindow* r_window = new ResultWindow( equipments[ is_server ? 0 : 1 ].getLife() > 0 );
 	r_window->updateWindow();
 	while(true) {
 		quitMightClickedQuit(&event, r_window);

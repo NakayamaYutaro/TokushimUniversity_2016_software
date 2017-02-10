@@ -48,7 +48,7 @@ class Communicator {
 			vector<Equipment> p_equipments,
 			RunawayRumba p_rumba
 		) : c_rumbas(p_c_rumbas), equipments(p_equipments), rumba(p_rumba), mutex_handler(PTHREAD_MUTEX_INITIALIZER) { }
-
+		void addCRoomba(int num);
 		int getClientID() { return client_id; };
 		virtual bool handshake() { return true; };
 		virtual void sendData(string msg) {};
@@ -61,7 +61,10 @@ class Communicator {
 Triple< vector<CustomizedRumba>, vector<Equipment>, RunawayRumba > Communicator::readData(){
 
 	pthread_mutex_lock(&mutex_handler);
-	Triple<vector<CustomizedRumba>, vector<Equipment>, RunawayRumba> data = Triple<vector<CustomizedRumba>, vector<Equipment>, RunawayRumba>(c_rumbas, equipments, rumba);
+	Triple<vector<CustomizedRumba>, vector<Equipment>, RunawayRumba> data =
+		Triple<vector<CustomizedRumba>, vector<Equipment>, RunawayRumba>(
+				c_rumbas, equipments, rumba
+		);
 	pthread_mutex_unlock(&mutex_handler);
 	return data;
 
@@ -72,5 +75,8 @@ void Communicator::stopReceiving() {
 	pthread_join(thread_handler, NULL);
 }
 
+void Communicator::addCRoomba(int num) {
+	for(int i = 0; i < num; i++) c_rumbas.push_back(CustomizedRumba( (i+1)*400 , (i+1)*400));
+}
 
 #endif

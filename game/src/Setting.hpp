@@ -1,7 +1,7 @@
 #ifndef SETTING_H
 #define SETTING_H
 
-#define FRAME_TERM 40
+#define FRAME_TERM 60
 #define PHYSICS_CALC_TERM 16
 #define ROOMBA_SPEED 1500.0			// [px/sec]
 #define DEFAULT_LIFE 20

@@ -10,8 +10,8 @@ class RumbaPanel : public Panel {
 		RumbaPanel(Vector<int> initial_pos, char* img_path) : Panel(initial_pos, img_path) { }
 		void setCenterPos(Vector<float> new_pos, int radius) { position = (Vector<int>)new_pos - radius; }
 		SDL_Rect getPrevRect() { return prev_rect; }
-		void drawPanel(SDL_Surface* window, int client_id) {
-			Panel::drawPanel(window, client_id);
+		void drawPanel(SDL_Surface* window, bool is_server) {
+			Panel::drawPanel(window, is_server);
 			prev_rect = dest_rect;
 		}
 };

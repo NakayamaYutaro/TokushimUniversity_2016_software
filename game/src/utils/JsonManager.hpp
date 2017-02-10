@@ -19,7 +19,7 @@
 
 using namespace std;
 
-namespace JsonObjectMapper {
+namespace JsonManager {
 
 	picojson::object unmarshal(string json);
 
@@ -27,10 +27,10 @@ namespace JsonObjectMapper {
 	// set from json msg : send each rumba and life of equipment
 	void setGameState(picojson::object game_state, vector<CustomizedRumba>* c_roombas, RunawayRumba* r_roomba, vector<Equipment>* equipments);
 	// ---- methods for server --- //
-	string getMyRoombaMsg(int client_id, vector<CustomizedRumba>* roombas);
+	string getMyRoombaMsg(int start, int end, vector<CustomizedRumba>* roombas);
 }
 
-string JsonObjectMapper::getMsgSendGameState(vector<CustomizedRumba> roombas, RunawayRumba roomba, vector<Equipment> equipments) {
+string JsonManager::getMsgSendGameState(vector<CustomizedRumba> roombas, RunawayRumba roomba, vector<Equipment> equipments) {
 
 	ostringstream msg;
 	Vector<int> pos = Vector<int>(0,0);
@@ -55,7 +55,7 @@ string JsonObjectMapper::getMsgSendGameState(vector<CustomizedRumba> roombas, Ru
 	return msg.str();
 }
 
-picojson::object JsonObjectMapper::unmarshal(string json) {
+picojson::object JsonManager::unmarshal(string json) {
 
 	picojson::value jsonval;
 	string err_msg = parse(jsonval, json);
@@ -69,7 +69,7 @@ picojson::object JsonObjectMapper::unmarshal(string json) {
 
 }
 
-void JsonObjectMapper::setGameState(picojson::object game_state, vector<CustomizedRumba>* c_roombas, RunawayRumba* r_roomba, vector<Equipment>* equipments) {
+void JsonManager::setGameState(picojson::object game_state, vector<CustomizedRumba>* c_roombas, RunawayRumba* r_roomba, vector<Equipment>* equipments) {
 	picojson::array roomba_data = game_state["roombas"].get<picojson::array>();
 	unsigned int i;
 	for(i = 0; i < roomba_data.size(); i++) {
@@ -81,12 +81,12 @@ void JsonObjectMapper::setGameState(picojson::object game_state, vector<Customiz
 	for(i = 0; i < life_data.size(); i++) equipments->at(i).setLife( (int)(life_data[i].get<double>()) );
 }
 
-string JsonObjectMapper::getMyRoombaMsg(int client_id, vector<CustomizedRumba>* roombas) {
+string JsonManager::getMyRoombaMsg(int start, int end, vector<CustomizedRumba>* roombas) {
 	stringstream ss;
 	Vector<float> pos;
-	ss << "{\"cmd\":\"" << CMD_DISTRIBUTE_DATA <<"\", \"ID\":" << client_id;
+	ss << "{\"cmd\":\"" << CMD_DISTRIBUTE_DATA <<"\", \"ID\":" << start;
 	ss << ", \"roombas\":[ ";
-	for(unsigned int i = client_id; i < roombas->size(); i++) {
+	for(unsigned int i = start; i < end; i++) {
 		pos = roombas->at(i).getCenterPos();
 		ss << "{\"x\":" << pos.getX() << ",\"y\":" << pos.getY() << "}";
 		if(i < roombas->size()-1) ss << ", ";

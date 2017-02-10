@@ -23,9 +23,9 @@ class Panel{
 			img_rect.w = img->w;
 			img_rect.h = img->h;
 		}
-		// if client_id == 0 then draw left side, otherwise draw right side
-		void drawPanel(SDL_Surface* window, int client_id) {
-			dest_rect.x = position.getX() - (GAME_WINDOW_WIDTH*client_id);
+		// if is_server then draw left side, otherwise draw right side
+		void drawPanel(SDL_Surface* window, bool is_server) {
+			dest_rect.x = position.getX() - (is_server ? 0 : GAME_WINDOW_WIDTH);
 			dest_rect.y = position.getY();
 			dest_rect.w = img->w;
 			dest_rect.h = img->h;

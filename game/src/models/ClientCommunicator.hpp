@@ -61,7 +61,7 @@ bool ClientCommunicator::handshake() {
 		memset(buf, 0, sizeof(buf));
 		if( (recv(recv_sock, buf, sizeof(buf), 0) > 0) ) {
 			string msg = buf;
-			picojson::object params = JsonObjectMapper::unmarshal(msg);
+			picojson::object params = JsonManager::unmarshal(msg);
 			// ハンドシェイクへの応答であれば割り振られたIDを取得
 			if( params["cmd"].get<string>() == CMD_HANDSHAKE ) {
 				client_id = static_cast<int>( params["ID"].get<double>() );
@@ -76,7 +76,7 @@ bool ClientCommunicator::handshake() {
 	memset(buf, 0, sizeof(buf));
 	if( (recv(recv_sock, buf, sizeof(buf), 0) > 0) ) {
 		string msg = buf;
-		picojson::object params = JsonObjectMapper::unmarshal(msg);
+		picojson::object params = JsonManager::unmarshal(msg);
 		// ゲーム開始の合図であればtrueを返す
 		return (params["cmd"].get<string>() == CMD_GAMESTART);
 	}
@@ -97,12 +97,12 @@ void* ClientCommunicator::receiveThread(void* args) {
 
 		if( recv(*(arg->p_sock), buf, sizeof(buf), 0) > 0 ) {
 			string msg_buf = buf;
-			picojson::object params = JsonObjectMapper::unmarshal(msg_buf);
+			picojson::object params = JsonManager::unmarshal(msg_buf);
 
 			if( params["cmd"].get<string>() == CMD_DISTRIBUTE_DATA ) {
 				pthread_mutex_lock(arg->p_mutex_handler);
 
-				// --- this code same as JsonObjectMapper::setGameState --- //
+				// --- this code same as JsonManager::setGameState --- //
 				picojson::array roomba_data = params["roombas"].get<picojson::array>();
 				unsigned int i;
 				for(i = 0; i < roomba_data.size(); i++) {
@@ -112,7 +112,7 @@ void* ClientCommunicator::receiveThread(void* args) {
 				}
 				picojson::array life_data = params["life"].get<picojson::array>();
 				for(i = 0; i < life_data.size(); i++) arg->p_equipments->at(i).setLife( (int)(life_data[i].get<double>()) );
-				// --- this code same as JsonObjectMapper::setGameState --- //
+				// --- this code same as JsonManager::setGameState --- //
 				
 				pthread_mutex_unlock(arg->p_mutex_handler);
 			}
@@ -126,4 +126,5 @@ void ClientCommunicator::startReceiving() {
 		new Pack4Thread(&recv_sock, &c_rumbas, &equipments, &rumba, &mutex_handler)
 	);
 }
+
 #endif
